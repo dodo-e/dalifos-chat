@@ -1,8 +1,267 @@
-<html>
-    <head>
-        <title>calender</title>
-        <link rel="stylesheet" href="style.css">
-        <script src="script.js"></script>
-        <link rel="shortcut icon" href="CALENDER LOGO.PNG" type="image/x-icon">
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dalifos Chat (Beta Release)</title>
+  <!-- تحميل مكتبة Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: linear-gradient(to right, #3F5EFB, #FC466B);
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    #chat {
+      background-image: url(bg.png);
+      border: 3px solid #ccc;
+      height: 270px;
+      width: 100%;
+      max-width: 980px;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+    }
+    .message {
+      padding: 10px;
+      border-radius: 10px;
+      margin: 5px 0;
+      max-width: 60%;
+      min-width: 300px;
+      word-wrap: break-word;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      color: black;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .message.you {
+      background-color: #00eeff;
+      align-self: flex-end;
+      text-align: right;
+    }
+    .message.other {
+      background-color: #ffffff;
+      align-self: flex-start;
+      text-align: left;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .name {
+      font-weight: bold;
+      color: #0078d7;
+      margin-bottom: 5px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 500px;
+      border: none;
+    }
+    button:hover {
+      background-image: linear-gradient(to right, yellow, orange);
+      color: white;
+      cursor: pointer;
+    }
+    #name, #message {
+      width: 40%;
+      background-color: white;
+      color: black;
+      font-size: 30px;
+    }
+    #avatar {
+      font-size: 16px;
+      color: white;
+    }
+    img {
+      width: 50px;
+      height: fit-content;
+    }
+    img:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<h2>💬 Dalifos Chat Beta</h2>
+<div id="chat"></div>
+<input type="file" id="avatar" accept="image/*" title="Upload your avatar (optional)">
+<input type="text" id="name" placeholder="Your name" title="Enter your name">
+<input type="text" id="message" placeholder="Type a message" title="Type your message here">
+<button id="sendBtn"><img src="send-svgrepo-com.svg" title="Send"></button>
+<button id="clearBtn" title="Clear all messages"><img src="bin-svgrepo-com.svg"></button>
+
+<script>
+  // === بيانات Supabase ===
+  const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4'; // 🔒
+  const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  const bannedUsers = new Set();
+  let currentUser = "";
+
+  function sanitizeMessage(msg) {
+    return msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function isContextuallyOffensive(msg) {
+    const badWords = ["shit", "fuck", "damn", "ugly", "stupid", "idiot", "trash"];
+    return badWords.some(word => msg.toLowerCase().includes(word));
+  }
+
+  function displayMessage(name, message, avatarData, time = "") {
+    const chat = document.getElementById("chat");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "message " + (name === currentUser ? "you" : "other");
+
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "name";
+    nameDiv.textContent = name + (time ? ` • ${time}` : "");
+
+    const textDiv = document.createElement("div");
+    textDiv.textContent = message;
+
+    msgDiv.appendChild(nameDiv);
+    msgDiv.appendChild(textDiv);
+
+    if (avatarData) {
+      const img = document.createElement("img");
+      img.src = avatarData;
+      msgDiv.appendChild(img);
+    }
+
+    chat.appendChild(msgDiv);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  async function loadMessages() {
+    const { data, error } = await client
+      .from('messages')
+      .select('*')
+      .order('timestamp', { ascending: true });
+
+    if (error) {
+      console.error("Error loading messages:", error.message);
+      return;
+    }
+    data.forEach(msg => {
+      displayMessage(msg.name, msg.message, msg.avatar, new Date(msg.timestamp).toLocaleString());
+    });
+  }
+
+  // ✅ تفعيل Realtime مع تتبع الحالة والـ payload
+  function subscribeToNewMessages() {
+    client
+      .channel('public:messages')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        payload => {
+          console.log('📩 Realtime payload وصل من Supabase:', payload);
+          const msg = payload.new;
+          displayMessage(
+            msg.name,
+            msg.message,
+            msg.avatar,
+            new Date(msg.timestamp).toLocaleString()
+          );
+        }
+      )
+      // 🔹 رقم 2: تتبع حالة اتصال القناة
+      .subscribe(status => {
+        console.log('🔌 حالة اتصال القناة:', status);
+      });
+  }
+
+  async function sendMessageToSupabase(name, message, avatarData) {
+    const { error } = await client
+      .from('messages')
+      .insert([{ name, message, avatar: avatarData, timestamp: new Date().toISOString() }]);
+
+    if (error) {
+      alert("❌ Error sending message: " + error.message);
+    }
+  }
+
+  document.getElementById("sendBtn").addEventListener("click", () => {
+    const name = document.getElementById("name").value.trim();
+    const msg = document.getElementById("message").value.trim();
+    const avatarFile = document.getElementById("avatar").files[0];
+
+    if (!name || !msg) {
+      alert("⚠️ Please enter a name and message.");
+      return;
+    }
+    currentUser = name;
+
+    if (bannedUsers.has(currentUser)) {
+      alert("🚫 You have been banned from sending messages.");
+      return;
+    }
+
+    const cleanMsg = sanitizeMessage(msg);
+
+    const sendMessage = (avatarData = null) => {
+      sendMessageToSupabase(name, cleanMsg, avatarData);
+      document.getElementById("message").value = "";
+    };
+
+    if (isContextuallyOffensive(msg)) {
+      const proceed = confirm("🚨 This message contains inappropriate content. Do you want to continue?");
+      if (!proceed) return;
+
+      if (avatarFile) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          sendMessage(reader.result);
+          bannedUsers.add(currentUser);
+          alert("🚫 You have been banned for sending offensive content.");
+        };
+        reader.readAsDataURL(avatarFile);
+      } else {
+        sendMessage();
+        bannedUsers.add(currentUser);
+        alert("🚫 You have been banned for sending offensive content.");
+      }
+      return;
+    }
+
+    if (avatarFile) {
+      const reader = new FileReader();
+      reader.onload = () => sendMessage(reader.result);
+      reader.readAsDataURL(avatarFile);
+    } else {
+      sendMessage();
+    }
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", async () => {
+    const confirmClear = confirm("Are you sure you want to delete all messages?");
+    if (!confirmClear) return;
+
+    const { error } = await client
+      .from('messages')
+      .delete()
+      .neq('id', 0);
+
+    if (error) {
+      alert("❌ Error clearing messages: " + error.message);
+    } else {
+      document.getElementById("chat").innerHTML = "";
+    }
+  });
+
+  // عند فتح الصفحة
+  window.addEventListener('DOMContentLoaded', () => {
+    loadMessages();
+    subscribeToNewMessages(); // ✅ تشغيل التحديث اللحظي مع التتبع
+  });
+</script>
+</body>
 </html>
