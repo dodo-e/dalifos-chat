@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Dalifos Chat (Beta Release)</title>
-  <!-- تحميل مكتبة Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
@@ -57,17 +56,30 @@
       color: #0078d7;
       margin-bottom: 5px;
     }
-    input, button {
+    input {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      width: 300px;
+      display: inline-block;
+      margin: auto;
+      max-width: 300px;
+    }
+    button {
       padding: 10px;
       margin: 5px;
       font-size: 16px;
       border-radius: 500px;
       border: none;
+      width: 70px;
+      color: black;
+      cursor: pointer;
     }
     button:hover {
       background-image: linear-gradient(to right, yellow, orange);
       color: white;
-      cursor: pointer;
     }
     #name, #message {
       width: 40%;
@@ -75,9 +87,10 @@
       color: black;
       font-size: 30px;
     }
-    #avatar {
-      font-size: 16px;
-      color: white;
+    #avatarBtn {
+      background-color: whitesmoke;
+      border: none;
+      margin-top: 20px;
     }
     img {
       width: 50px;
@@ -91,177 +104,123 @@
 <body>
 <h2>💬 Dalifos Chat Beta</h2>
 <div id="chat"></div>
-<input type="file" id="avatar" accept="image/*" title="Upload your avatar (optional)">
+<br>
+
 <input type="text" id="name" placeholder="Your name" title="Enter your name">
 <input type="text" id="message" placeholder="Type a message" title="Type your message here">
+<br><br>
+
+<input type="file" id="avatar" accept="image/*" style="display: none;">
+<button type="button" id="avatarBtn" title="Choose an avatar (optional)">
+  <img src="avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon" />
+</button>
 <button id="sendBtn"><img src="send-svgrepo-com.svg" title="Send"></button>
 <button id="clearBtn" title="Clear all messages"><img src="bin-svgrepo-com.svg"></button>
-
+<button id="recordBtn">🎙️</button>
+<button id="stopBtn">⏹️</button>
 <script>
-  // === بيانات Supabase ===
+  window.addEventListener("DOMContentLoaded", () => {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) {
+    const warning = document.createElement("div");
+    warning.textContent = "this website cannot used on safari (voice problem), please use Chrome or Firefox for best experience.";
+    warning.style.backgroundColor = "#ffcc00";
+    warning.style.color = "black";
+    warning.style.padding = "10px";
+    warning.style.borderRadius = "10px";
+    warning.style.marginBottom = "10px";
+    warning.style.fontWeight = "bold";
+    document.body.insertBefore(warning, document.body.firstChild);
+  }
+});
+window.addEventListener("DOMContentLoaded", () => {
+  // ✅ إعداد Supabase
   const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4'; // 🔒
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTQzOTMzMiwiZXhwIjoyMDcxMDE1MzMyfQ.PmCYsNEaA3pNM9nzzkAl2AewyDKrkEgkYIDn9vkJAfw'; 
   const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  const bannedUsers = new Set();
+  let mediaRecorder;
+  let audioChunks = [];
   let currentUser = "";
 
-  function sanitizeMessage(msg) {
-    return msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  }
+  // ✅ زر التسجيل
+  document.getElementById("recordBtn").addEventListener("click", async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
 
-  function isContextuallyOffensive(msg) {
-    const badWords = ["shit", "fuck", "damn", "ugly", "stupid", "idiot", "trash"];
-    return badWords.some(word => msg.toLowerCase().includes(word));
-  }
-
-  function displayMessage(name, message, avatarData, time = "") {
-    const chat = document.getElementById("chat");
-    const msgDiv = document.createElement("div");
-    msgDiv.className = "message " + (name === currentUser ? "you" : "other");
-
-    const nameDiv = document.createElement("div");
-    nameDiv.className = "name";
-    nameDiv.textContent = name + (time ? ` • ${time}` : "");
-
-    const textDiv = document.createElement("div");
-    textDiv.textContent = message;
-
-    msgDiv.appendChild(nameDiv);
-    msgDiv.appendChild(textDiv);
-
-    if (avatarData) {
-      const img = document.createElement("img");
-      img.src = avatarData;
-      msgDiv.appendChild(img);
-    }
-
-    chat.appendChild(msgDiv);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  async function loadMessages() {
-    const { data, error } = await client
-      .from('messages')
-      .select('*')
-      .order('timestamp', { ascending: true });
-
-    if (error) {
-      console.error("Error loading messages:", error.message);
-      return;
-    }
-    data.forEach(msg => {
-      displayMessage(msg.name, msg.message, msg.avatar, new Date(msg.timestamp).toLocaleString());
-    });
-  }
-
-  // ✅ تفعيل Realtime مع تتبع الحالة والـ payload
-  function subscribeToNewMessages() {
-    client
-      .channel('public:messages')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'messages' },
-        payload => {
-          console.log('📩 Realtime payload وصل من Supabase:', payload);
-          const msg = payload.new;
-          displayMessage(
-            msg.name,
-            msg.message,
-            msg.avatar,
-            new Date(msg.timestamp).toLocaleString()
-          );
-        }
-      )
-      // 🔹 رقم 2: تتبع حالة اتصال القناة
-      .subscribe(status => {
-        console.log('🔌 حالة اتصال القناة:', status);
-      });
-  }
-
-  async function sendMessageToSupabase(name, message, avatarData) {
-    const { error } = await client
-      .from('messages')
-      .insert([{ name, message, avatar: avatarData, timestamp: new Date().toISOString() }]);
-
-    if (error) {
-      alert("❌ Error sending message: " + error.message);
-    }
-  }
-
-  document.getElementById("sendBtn").addEventListener("click", () => {
-    const name = document.getElementById("name").value.trim();
-    const msg = document.getElementById("message").value.trim();
-    const avatarFile = document.getElementById("avatar").files[0];
-
-    if (!name || !msg) {
-      alert("⚠️ Please enter a name and message.");
-      return;
-    }
-    currentUser = name;
-
-    if (bannedUsers.has(currentUser)) {
-      alert("🚫 You have been banned from sending messages.");
-      return;
-    }
-
-    const cleanMsg = sanitizeMessage(msg);
-
-    const sendMessage = (avatarData = null) => {
-      sendMessageToSupabase(name, cleanMsg, avatarData);
-      document.getElementById("message").value = "";
+    mediaRecorder.ondataavailable = event => {
+      audioChunks.push(event.data);
     };
 
-    if (isContextuallyOffensive(msg)) {
-      const proceed = confirm("🚨 This message contains inappropriate content. Do you want to continue?");
-      if (!proceed) return;
+    mediaRecorder.start();
+    console.log("🎙️ التسجيل بدأ...");
+  });
 
-      if (avatarFile) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          sendMessage(reader.result);
-          bannedUsers.add(currentUser);
-          alert("🚫 You have been banned for sending offensive content.");
-        };
-        reader.readAsDataURL(avatarFile);
-      } else {
-        sendMessage();
-        bannedUsers.add(currentUser);
-        alert("🚫 You have been banned for sending offensive content.");
+  // ✅ زر الإيقاف والرفع
+  document.getElementById("stopBtn").addEventListener("click", () => {
+    if (!mediaRecorder || mediaRecorder.state === "inactive") return;
+    mediaRecorder.stop();
+    console.log("🛑 التسجيل وقف.");
+
+    mediaRecorder.onstop = async () => {
+     const audioBlob = new Blob(audioChunks, { type: 'audio/mp3; codecs=opus' });
+      const fileName = `voice_${Date.now()}.webm`;
+
+      // ✅ رفع الصوت إلى Supabase Storage
+      const { data, error } = await client.storage
+        .from('voice_notes')
+        .upload(fileName, audioBlob, {
+          contentType: 'audio/webm'
+        });
+
+      if (error) {
+        alert("❌ something went wrong with voice,ask the devoloper for this error: " + error.message);
+        return;
       }
-      return;
-    }
 
-    if (avatarFile) {
-      const reader = new FileReader();
-      reader.onload = () => sendMessage(reader.result);
-      reader.readAsDataURL(avatarFile);
-    } else {
-      sendMessage();
-    }
+      const publicUrl = client.storage
+        .from('voice_notes')
+        .getPublicUrl(fileName).data.publicUrl;
+
+      console.log("🔗 رابط الصوت:", publicUrl);
+
+      // ✅ حفظ البيانات في جدول voice_messages
+      const nameInput = document.getElementById("name").value.trim();
+      currentUser = nameInput || "unknown_user";
+
+      const { data: inserted, error: dbError } = await client
+        .from('voice_messages')
+        .insert([
+          { name: currentUser, audio_url: publicUrl, timestamp: new Date().toISOString() }
+        ])
+        .select();
+
+      if (dbError) {
+        alert("❌ something wrong with voice as the devoloper for this error " + dbError.message);
+        return;
+      }
+
+      // ✅ عرض الرسالة في الشات
+      const chat = document.getElementById("chat");
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "message " + (currentUser === inserted[0].name ? "you" : "other");
+
+      const nameDiv = document.createElement("div");
+      nameDiv.className = "name";
+      nameDiv.textContent = inserted[0].name + " • " + new Date(inserted[0].timestamp).toLocaleTimeString();
+
+      const audioPlayer = document.createElement("audio");
+      audioPlayer.controls = true;
+      audioPlayer.src = inserted[0].audio_url;
+
+      msgDiv.appendChild(nameDiv);
+      msgDiv.appendChild(audioPlayer);
+      chat.appendChild(msgDiv);
+      chat.scrollTop = chat.scrollHeight;
+    };
   });
-
-  document.getElementById("clearBtn").addEventListener("click", async () => {
-    const confirmClear = confirm("Are you sure you want to delete all messages?");
-    if (!confirmClear) return;
-
-    const { error } = await client
-      .from('messages')
-      .delete()
-      .neq('id', 0);
-
-    if (error) {
-      alert("❌ Error clearing messages: " + error.message);
-    } else {
-      document.getElementById("chat").innerHTML = "";
-    }
-  });
-
-  // عند فتح الصفحة
-  window.addEventListener('DOMContentLoaded', () => {
-    loadMessages();
-    subscribeToNewMessages(); // ✅ تشغيل التحديث اللحظي مع التتبع
-  });
+});
 </script>
 </body>
 </html>
