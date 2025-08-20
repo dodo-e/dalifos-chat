@@ -2,128 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dalifos Chat (Beta Release)</title>
+  <title>Dalifos© Chat (Beta Release)</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-image: linear-gradient(to right, #3F5EFB, #FC466B);
-      padding: 20px;
-      text-align: center;
-      color: white;
-    }
-    #chat {
-      background-image: url(bg.png);
-      border: 3px solid #ccc;
-      height: 270px;
-      width: 100%;
-      max-width: 980px;
-      overflow-y: auto;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-    }
-    .message {
-      padding: 10px;
-      border-radius: 10px;
-      margin: 5px 0;
-      max-width: 60%;
-      min-width: 300px;
-      word-wrap: break-word;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      color: black;
-      animation: fadeIn 0.5s ease forwards;
-    }
-    .message.you {
-      background-color: #00eeff;
-      align-self: flex-end;
-      text-align: right;
-    }
-    .message.other {
-      background-color: #ffffff;
-      align-self: flex-start;
-      text-align: left;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .name {
-      font-weight: bold;
-      color: #0078d7;
-      margin-bottom: 5px;
-    }
-    input {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 30px;
-      border: none;
-      width: 300px;
-      display: inline-block;
-      margin: auto;
-      max-width: 300px;
-    }
-    button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 500px;
-      border: none;
-      width: 70px;
-      color: black;
-      cursor: pointer;
-    }
-    button:hover {
-      background-image: linear-gradient(to right, yellow, orange);
-      color: white;
-    }
-    #name, #message {
-      width: 40%;
-      background-color: white;
-      color: black;
-      font-size: 30px;
-    }
-    #avatarBtn {
-      background-color: whitesmoke;
-      border: none;
-      margin-top: 20px;
-    }
-    img {
-      width: 50px;
-      height: fit-content;
-    }
-    img:hover {
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="logo.png" type="image/x-icon">
 </head>
 <body>
+  <div class="navbar">
+    <img src="logo.png" alt="Dalifos Logo" class="logo">
+    <h1>Dalifos© Chat Beta</h1>
+    <h2>chats</h2> 
+    <a href="private.html" title="private chat (under construction)"> <button><img src="private-message-svgrepo-com.svg"></button></a>
+    <a href="private-group.html" title="private group (under construction)"><button> <img src="group-chat-svgrepo-com.svg"></button></a>
+    <a href="index.html" title="public chat"><button><img src="public-opened-svgrepo-com.svg"></button> </a>
+    <h2>errors reporter</h2>
+    <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"> <button><img src="error-svgrepo-com.svg"></button></a>
+    <h2>Dalifos© progects</h2>
+    <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><button><img src="logo main.png"></button> </a>
+  </div>
 <h2>💬 Dalifos Chat Beta</h2>
 <div id="chat"></div>
 <br>
-
-<input type="text" id="name" placeholder="Your name" title="Enter your name">
-<input type="text" id="message" placeholder="Type a message" title="Type your message here">
-<br><br>
-
+<br>
 <input type="file" id="avatar" accept="image/*" style="display: none;">
 <button type="button" id="avatarBtn" title="Choose an avatar (optional)">
   <img src="avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon" />
 </button>
+<input type="text" id="name" placeholder="Your name" title="Enter your name">
+<input type="text" id="messages" placeholder="Type a message" title="Type your message here">
 <button id="sendBtn"><img src="send-svgrepo-com.svg" title="Send"></button>
+<br><br>
 <button id="clearBtn" title="Clear all messages"><img src="bin-svgrepo-com.svg"></button>
-<button id="recordBtn">🎙️</button>
-<button id="stopBtn">⏹️</button>
+<button id="recordBtn"><img src="play-svgrepo-com.svg"></button>
+<button id="stopBtn"><img src="stop-circle-svgrepo-com.svg"></button>
+<h3>note:this website is beta, so if you see an error.please report it/do not share any personal data because some data may be seen by company</h3>
+<h3>by devoloper of Dalifos: David</h3>
 <script>
-  window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   if (isSafari) {
     const warning = document.createElement("div");
-    warning.textContent = "this website cannot used on safari (voice problem), please use Chrome or Firefox for best experience.";
+    warning.textContent = "⚠️ Safari is not supported. Please use Chrome, Firefox, or Edge for the best experience.";
     warning.style.backgroundColor = "#ffcc00";
     warning.style.color = "black";
     warning.style.padding = "10px";
@@ -132,93 +51,296 @@
     warning.style.fontWeight = "bold";
     document.body.insertBefore(warning, document.body.firstChild);
   }
-});
-window.addEventListener("DOMContentLoaded", () => {
-  // ✅ إعداد Supabase
+
   const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTQzOTMzMiwiZXhwIjoyMDcxMDE1MzMyfQ.PmCYsNEaA3pNM9nzzkAl2AewyDKrkEgkYIDn9vkJAfw'; 
-  const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+  const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
+  const client = window.supabase.createClient(supabaseUrl, anonKey);
+
+  const savedName = localStorage.getItem("chat_name");
+  const savedAvatar = localStorage.getItem("chat_avatar");
+
+  if (savedName) {
+    document.getElementById("name").value = savedName;
+  }
+
+  const badWords = ["fuck", "asshole", "mad" , "idiot", "stupid", "dumb", "hell", "dogs", "fouls", "fool","كلب", "كلب", "غبي", "أحمق", "أبله", "أهبل", "مجنون", "حمار", "أحمق", "غبي جدا", "أبله جدا", "أهبل جدا", "مجنون جدا", "حمار جدا", "أنت غبي", "أنت أحمق", "أنت أبله", "أنت أهبل", "أنت مجنون", "أنت حمار","🤮","💩","🖕🏼"];
+  const violations = JSON.parse(localStorage.getItem("violations")) || {};
+
+  client
+    .channel('messages-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages'
+      },
+      (payload) => {
+        const msg = payload.new;
+        const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+        if (msg.name === nameInput) return;
+
+        const chat = document.getElementById("chat");
+const msgDiv = document.createElement("div");
+msgDiv.className = msg.name === "🚨 النظام" ? "message system" : "message other";
+        msgDiv.className = "message other";
+
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "name";
+        nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
+
+        if (msg.avatar) {
+          const avatarImg = document.createElement("img");
+          avatarImg.src = msg.avatar;
+          avatarImg.style.width = "40px";
+          avatarImg.style.borderRadius = "50%";
+          avatarImg.style.marginRight = "10px";
+          nameDiv.prepend(avatarImg);
+        }
+
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = msg.message;
+
+        msgDiv.appendChild(nameDiv);
+        msgDiv.appendChild(messageDiv);
+        chat.appendChild(msgDiv);
+        chat.scrollTop = chat.scrollHeight;
+      }
+    )
+    .subscribe();
 
   let mediaRecorder;
   let audioChunks = [];
   let currentUser = "";
 
-  // ✅ زر التسجيل
   document.getElementById("recordBtn").addEventListener("click", async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks = [];
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = MediaRecorder.isTypeSupported('audio/ogg') ? 'audio/ogg' : 'audio/webm';
+      mediaRecorder = new MediaRecorder(stream, { mimeType });
+      audioChunks = [];
 
-    mediaRecorder.ondataavailable = event => {
-      audioChunks.push(event.data);
-    };
+      mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+      };
 
-    mediaRecorder.start();
-    console.log("🎙️ التسجيل بدأ...");
+      mediaRecorder.start();
+      console.log("🎙️ Recording started");
+    } catch (err) {
+      alert("❌ Microphone access is required to record audio.");
+    }
   });
 
-  // ✅ زر الإيقاف والرفع
   document.getElementById("stopBtn").addEventListener("click", () => {
-    if (!mediaRecorder || mediaRecorder.state === "inactive") return;
+    if (!mediaRecorder || mediaRecorder.state !== "recording") {
+      alert("❌ You must start recording before stopping.");
+      return;
+    }
+
     mediaRecorder.stop();
-    console.log("🛑 التسجيل وقف.");
+    console.log("🛑 Recording stopped");
 
     mediaRecorder.onstop = async () => {
-     const audioBlob = new Blob(audioChunks, { type: 'audio/mp3; codecs=opus' });
-      const fileName = `voice_${Date.now()}.webm`;
+      const mimeType = mediaRecorder.mimeType;
+      const extension = mimeType.includes('ogg') ? 'ogg' : 'webm';
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
 
-      // ✅ رفع الصوت إلى Supabase Storage
-      const { data, error } = await client.storage
+      if (audioBlob.size === 0) {
+        alert("❌ The audio file is empty and cannot be uploaded.");
+        return;
+      }
+
+      let fileName = `voice_${Date.now()}.${extension}`;
+      fileName = fileName.replace(/[^a-zA-Z0-9_\u0600-\u06FF.]/g, '_');
+
+      const { data: uploadData, error: uploadError } = await client.storage
         .from('voice_notes')
         .upload(fileName, audioBlob, {
-          contentType: 'audio/webm'
+          contentType: mimeType
         });
 
-      if (error) {
-        alert("❌ something went wrong with voice,ask the devoloper for this error: " + error.message);
+      if (uploadError || !uploadData) {
+        alert("❌ Upload failed. Please report this error: " + (uploadError?.message || "Unknown error"));
         return;
       }
 
-      const publicUrl = client.storage
+      const { data: publicData, error: publicUrlError } = client.storage
         .from('voice_notes')
-        .getPublicUrl(fileName).data.publicUrl;
+        .getPublicUrl(fileName);
 
-      console.log("🔗 رابط الصوت:", publicUrl);
+      if (publicUrlError || !publicData?.publicUrl) {
+        alert("❌ Failed to get public URL. Please report this error.");
+        return;
+      }
 
-      // ✅ حفظ البيانات في جدول voice_messages
+      const publicUrl = publicData.publicUrl;
       const nameInput = document.getElementById("name").value.trim();
-      currentUser = nameInput || "unknown_user";
+      currentUser = nameInput || "Anonymous";
 
-      const { data: inserted, error: dbError } = await client
+      const { error: dbError } = await client
         .from('voice_messages')
         .insert([
-          { name: currentUser, audio_url: publicUrl, timestamp: new Date().toISOString() }
-        ])
-        .select();
+          {
+            name: currentUser,
+            audio_url: publicUrl,
+            timestamp: new Date().toISOString()
+          }
+        ]);
 
       if (dbError) {
-        alert("❌ something wrong with voice as the devoloper for this error " + dbError.message);
+        alert("❌ Failed to save message. Please report this error: " + dbError.message);
         return;
       }
 
-      // ✅ عرض الرسالة في الشات
       const chat = document.getElementById("chat");
       const msgDiv = document.createElement("div");
-      msgDiv.className = "message " + (currentUser === inserted[0].name ? "you" : "other");
+      msgDiv.className = "message you";
 
       const nameDiv = document.createElement("div");
       nameDiv.className = "name";
-      nameDiv.textContent = inserted[0].name + " • " + new Date(inserted[0].timestamp).toLocaleTimeString();
+      nameDiv.textContent = currentUser + " • " + new Date().toLocaleTimeString();
 
       const audioPlayer = document.createElement("audio");
       audioPlayer.controls = true;
-      audioPlayer.src = inserted[0].audio_url;
+      audioPlayer.style.width = "100%";
+
+      const source = document.createElement("source");
+      source.src = publicUrl;
+      source.type = mimeType;
+
+      audioPlayer.appendChild(source);
+      audioPlayer.innerHTML += "Your browser does not support audio playback.";
 
       msgDiv.appendChild(nameDiv);
       msgDiv.appendChild(audioPlayer);
       chat.appendChild(msgDiv);
       chat.scrollTop = chat.scrollHeight;
     };
+  });
+
+  document.getElementById("avatarBtn").addEventListener("click", () => {
+    document.getElementById("avatar").click();
+  });
+
+  document.getElementById("sendBtn").addEventListener("click", async () => {
+    const nameInput = document.getElementById("name").value.trim();
+    const messageInput = document.getElementById("messages").value.trim();
+    const avatarFile = document.getElementById("avatar").files[0];
+
+    if (!messageInput) {
+      alert("❌ you must enter a message before sending.");
+      return;
+    }
+
+    const name = nameInput || "Anonymous";
+    const lowerMessage = messageInput.toLowerCase();
+    const containsBadWord = badWords.some(word => lowerMessage.includes(word));
+    const userViolations = violations[name] || { count: 0, bannedUntil: null };
+    const now = Date.now();
+
+    if (userViolations.bannedUntil && now < userViolations.bannedUntil) {
+      alert("❌ you are currently banned from sending messages. Please wait 5 minutes until the ban expires.");
+      return;
+    }
+
+    if (containsBadWord) {
+      userViolations.count += 1;
+
+      if (userViolations.count === 1) {
+        alert("⚠️ inappropriate language detected. This is your first warning.after 3 warnings, you will be banned for 5 minutes.");
+      } else if (userViolations.count >= 3) {
+        userViolations.bannedUntil = now + 5 * 60 * 1000;
+        alert("🚫 you are banned from using massaging for 5 minutes because of using inappropriate words a lot");
+        await client
+          .from('messages')
+          .insert([
+            {
+              name: "🚨 system",
+              message: `${name} is banned for using inappropriate language.`,
+              avatar: "",
+              timestamp: new Date().toISOString()
+
+            }
+          ]);
+        violations[name] = userViolations;
+        localStorage.setItem("violations", JSON.stringify(violations));
+        return;
+      }
+
+      violations[name] = userViolations;
+      localStorage.setItem("violations", JSON.stringify(violations));
+    }
+
+    let avatarUrl = "";
+
+    if (avatarFile) {
+      const avatarFileName = `avatar_${Date.now()}_${avatarFile.name}`.replace(/[^a-zA-Z0-9_.]/g, '_');
+
+      const { data: uploadData, error: uploadError } = await client.storage
+        .from('avatars')
+        .upload(avatarFileName, avatarFile, {
+          contentType: avatarFile.type
+        });
+
+      if (uploadError) {
+        alert("❌ error uploading avatar.report this error: " + uploadError.message);
+        return;
+      }
+
+      const { data: publicData } = client.storage
+        .from('avatars')
+        .getPublicUrl(avatarFileName);
+
+      avatarUrl = publicData.publicUrl;
+    }
+
+    const { error: dbError } = await client
+      .from('messages')
+      .insert([
+        {
+          name: name,
+          message: messageInput,
+          avatar: avatarUrl,
+          timestamp: new Date().toISOString()
+        }
+      ]);
+
+    if (dbError) {
+      alert("❌ error saving massege.report this problem " + dbError.message);
+      return;
+    }
+
+    localStorage.setItem("chat_name", name);
+    localStorage.setItem("chat_avatar", avatarUrl);
+
+    const chat = document.getElementById("chat");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "message you";
+
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "name";
+    nameDiv.textContent = name + " • " + new Date().toLocaleTimeString();
+
+    if (avatarUrl) {
+      const avatarImg = document.createElement("img");
+      avatarImg.src = avatarUrl;
+      avatarImg.style.width = "50px";
+      avatarImg.style.height = "50px";
+      avatarImg.style.borderRadius = "100%";
+      avatarImg.style.marginRight = "10px";
+      nameDiv.prepend(avatarImg);
+    }
+
+    const messageDiv = document.createElement("div");
+    messageDiv.textContent = messageInput;
+
+    msgDiv.appendChild(nameDiv);
+    msgDiv.appendChild(messageDiv);
+    chat.appendChild(msgDiv);
+    chat.scrollTop = chat.scrollHeight;
+
+    document.getElementById("messages").value = "";
+    document.getElementById("avatar").value = "";
   });
 });
 </script>
