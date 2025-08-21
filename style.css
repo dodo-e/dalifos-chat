@@ -4,6 +4,11 @@
       padding: 20px;
       text-align: center;
       color: white;
+    } 
+    button {
+      height: fit-content;
+      line-height: normal;
+      line-height: 1;
     }
 .dropdown {
   position: relative; 
@@ -78,9 +83,7 @@
       height: 120px;
       margin-right: 20px;
     }
-    .navbar button {
-      height: fit-content;
-    }
+
     #chat {
       background-image: url(bg.png);
       border: 3px solid #ccc;
