@@ -5,11 +5,18 @@
       text-align: center;
       color: white;
     } 
-    button {
-      height: fit-content;
-      line-height: normal;
-      line-height: 1;
-    }
+button,
+input[type="submit"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 10px 20px;
+  margin: 0;
+}
 .dropdown {
   position: relative; 
   display: inline-block;
