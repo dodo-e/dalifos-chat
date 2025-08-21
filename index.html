@@ -11,16 +11,24 @@
   <div class="navbar">
     <img src="logo.png" alt="Dalifos Logo" class="logo">
     <h1>Dalifos© Chat Beta</h1>
-    <h2>chats</h2> 
-    <a href="private.html" title="private chat (under construction)"> <button><img src="private-message-svgrepo-com.svg"></button></a>
-    <a href="private-group.html" title="private group (under construction)"><button> <img src="group-chat-svgrepo-com.svg"></button></a>
-    <a href="index.html" title="public chat"><button><img src="public-opened-svgrepo-com.svg"></button> </a>
-    <h2>errors reporter</h2>
-    <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"> <button><img src="error-svgrepo-com.svg"></button></a>
-    <h2>Dalifos© progects</h2>
-    <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><button><img src="logo main.png"></button> </a>
+<div class="dropdown">
+  <button class="dropbtn">chats</button>
+  <div class="dropdown-content">
+    <a href="#"title="private chat (not created)"style="cursor: not-allowed;"><img src="private-message-svgrepo-com.svg"> >private chat(not created)</a>
+    <a href="#"title="private group (not created)" style="cursor: not-allowed;"><img src="group-chat-svgrepo-com.svg">private group chat(not created)</a>
+    <a href="index.html"title="public chat"><img src="public-opened-svgrepo-com.svg">public chat </a>
   </div>
-<h2>💬 Dalifos Chat Beta</h2>
+</div>
+    <div class="dropdown">
+  <button class="dropbtn">Dalifos© progects</button>
+  <div class="dropdown-content">
+    <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="logo main.png">Dalifos© web</a>
+    <a href="index.html"title="Dalifos© chat"><img src="public-opened-svgrepo-com.svg">Dalifos© chat</a>
+  </div> 
+</div>
+     <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"> <button><img src="error-svgrepo-com.svg"></button></a>
+  </div>
+<h2>💬 Dalifos Chat Beta 2</h2>
 <div id="chat"></div>
 <br>
 <br>
@@ -32,7 +40,6 @@
 <input type="text" id="messages" placeholder="Type a message" title="Type your message here">
 <button id="sendBtn"><img src="send-svgrepo-com.svg" title="Send"></button>
 <br><br>
-<button id="clearBtn" title="Clear all messages"><img src="bin-svgrepo-com.svg"></button>
 <button id="recordBtn"><img src="play-svgrepo-com.svg"></button>
 <button id="stopBtn"><img src="stop-circle-svgrepo-com.svg"></button>
 <h3>note:this website is beta, so if you see an error.please report it/do not share any personal data because some data may be seen by company</h3>
@@ -62,8 +69,65 @@ window.addEventListener("DOMContentLoaded", () => {
   if (savedName) {
     document.getElementById("name").value = savedName;
   }
+  
+  // دالة لعرض رسالة في الشات
+  function displayMessage(msg) {
+      const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+      const isMyMessage = msg.name === nameInput;
 
-  const badWords = ["fuck", "asshole", "mad" , "idiot", "stupid", "dumb", "dogs", "fouls", "fool","كلب", "كلب", "غبي", "أحمق", "أبله", "أهبل", "مجنون", "حمار", "أحمق", "غبي جدا", "أبله جدا", "أهبل جدا", "مجنون جدا", "حمار جدا", "أنت غبي", "أنت أحمق", "أنت أبله", "أنت أهبل", "أنت مجنون", "أنت حمار","🤮","💩","🖕🏼"];
+      const chat = document.getElementById("chat");
+      const msgDiv = document.createElement("div");
+      msgDiv.className = isMyMessage ? "message you" : "message other";
+      
+      const nameDiv = document.createElement("div");
+      nameDiv.className = "name";
+      nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
+      
+      if (msg.avatar) {
+          const avatarImg = document.createElement("img");
+          avatarImg.src = msg.avatar;
+          avatarImg.style.width = "40px";
+          avatarImg.style.height = "40px";
+          avatarImg.style.borderRadius = "50%";
+          avatarImg.style.marginRight = "10px";
+          nameDiv.prepend(avatarImg);
+      }
+      
+      const messageDiv = document.createElement("div");
+      messageDiv.textContent = msg.message;
+      
+      msgDiv.appendChild(nameDiv);
+      msgDiv.appendChild(messageDiv);
+      chat.appendChild(msgDiv);
+      chat.scrollTop = chat.scrollHeight;
+  }
+
+  // دالة جديدة لجلب الرسائل القديمة من Supabase عند تحميل الصفحة
+  async function fetchOldMessages() {
+      try {
+          const { data, error } = await client
+              .from('messages')
+              .select('*')
+              .order('timestamp', { ascending: true }); // ترتيب الرسائل من الأقدم للأحدث
+
+          if (error) {
+              console.error("Error fetching old messages:", error);
+              return;
+          }
+
+          if (data) {
+              // عرض كل رسالة تم جلبها
+              data.forEach(msg => displayMessage(msg));
+          }
+      } catch (err) {
+          console.error("An unexpected error occurred while fetching messages:", err);
+      }
+  }
+
+  // استدعاء الدالة عند تحميل الصفحة لجلب الرسائل القديمة
+  fetchOldMessages();
+
+  const badWords = ["fuck", "asshole", "mad" , "idiot", "stupid", "dumb", "dogs", "fouls", "fool","كلب", "غبي", "أحمق", "أبله", "أهبل", "مجنون", "حمار", "أحمق", "غبي جدا", "أبله جدا", "أهبل جدا", "مجنون جدا", "حمار جدا", "أنت غبي", "أنت أحمق", "أنت أبله", "أنت أهبل", "أنت مجنون", "أنت حمار","🤮","💩","🖕🏼"];
   const violations = JSON.parse(localStorage.getItem("violations")) || {};
 
   client
@@ -78,33 +142,11 @@ window.addEventListener("DOMContentLoaded", () => {
       (payload) => {
         const msg = payload.new;
         const nameInput = document.getElementById("name").value.trim() || "Anonymous";
-        if (msg.name === nameInput) return;
-
-        const chat = document.getElementById("chat");
-const msgDiv = document.createElement("div");
-msgDiv.className = msg.name === "🚨 النظام" ? "message system" : "message other";
-        msgDiv.className = "message other";
-
-        const nameDiv = document.createElement("div");
-        nameDiv.className = "name";
-        nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
-
-        if (msg.avatar) {
-          const avatarImg = document.createElement("img");
-          avatarImg.src = msg.avatar;
-          avatarImg.style.width = "40px";
-          avatarImg.style.borderRadius = "50%";
-          avatarImg.style.marginRight = "10px";
-          nameDiv.prepend(avatarImg);
+        
+        // عرض الرسائل الأخرى فقط، لأن رسالتك أنت يتم عرضها مباشرة عند الإرسال
+        if (msg.name !== nameInput) {
+             displayMessage(msg);
         }
-
-        const messageDiv = document.createElement("div");
-        messageDiv.textContent = msg.message;
-
-        msgDiv.appendChild(nameDiv);
-        msgDiv.appendChild(messageDiv);
-        chat.appendChild(msgDiv);
-        chat.scrollTop = chat.scrollHeight;
       }
     )
     .subscribe();
@@ -259,7 +301,6 @@ msgDiv.className = msg.name === "🚨 النظام" ? "message system" : "messag
               message: `${name} is banned for using inappropriate language.`,
               avatar: "",
               timestamp: new Date().toISOString()
-
             }
           ]);
         violations[name] = userViolations;

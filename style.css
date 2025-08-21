@@ -5,6 +5,60 @@
       text-align: center;
       color: white;
     }
+    /* Container for the dropdown */
+.dropdown {
+  position: relative; 
+  display: inline-block;
+  width: 200px;
+}
+.dropdown img {
+  width: 30px;
+  height: 30px;
+  display: block;
+  margin: auto;
+}
+.dropdown-trigger {
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  width: 200px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content {
+  display: none;
+  width: fit-content;
+  position: absolute;
+  border-radius: 4px;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: black;
+  border-radius: 4px;;
+  font-family: candara, sans-serif;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content a:hover {
+  background-image: linear-gradient(to right, yellow, orange);
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+  width: fit-content;
+}
+.dropdown button {
+  background-color: #f1f1f1;
+  border: none;
+  padding: 12px 16px;
+  width: fit-content;
+  height: fit-content;
+  text-align: left;
+}
 .navbar {
       display: flex;
       justify-content: center;
