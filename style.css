@@ -1,26 +1,14 @@
-    body {
-      font-family: Arial, sans-serif;
-      background-image: linear-gradient(to right, #3F5EFB, #FC466B);
-      padding: 20px;
-      text-align: center;
-      color: white;
-    } 
-button {
-    -webkit-appearance: none;
-    appearance: none;
-    -webkit-font-smoothing: antialiased; 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    margin: 0;
-}
+body {
+  font-family: Arial, sans-serif;
+  background-image: linear-gradient(to right, #3F5EFB, #FC466B);
+  padding: 20px;
+  text-align: center;
+  color: white;
+} 
 .dropdown {
   position: relative; 
   display: inline-block;
-  width: 200px;
+  width: fit-content;
 }
 .dropdown img {
   width: 30px;
@@ -49,7 +37,7 @@ button {
 }
 .dropdown-content a {
   color: black;
-  border-radius: 4px;;
+  border-radius: 4px;
   font-family: candara, sans-serif;
   padding: 12px 16px;
   text-decoration: none;
@@ -62,119 +50,146 @@ button {
   display: block;
   width: fit-content;
 }
-.dropdown button {
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(30px);          
+  -webkit-backdrop-filter: blur(30px);  
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border: 2px solid black;
+}
+.navbar img.logo {
+  width: 150px;
+  height: 120px;
+  margin-right: 20px;
+}
+#chat {
+  background-image: url(bg.png);
+  border: 3px solid #ccc;
+  height: 270px;
+  width: 100%;
+  max-width: 980px;
+  overflow-y: auto;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.message {
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+  max-width: 60%;
+  min-width: 300px;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: black;
+  animation: fadeIn 0.5s ease forwards;
+}
+.message.you {
+  background-color: #00eeff;
+  align-self: flex-end;
+  text-align: right;
+}
+.message.other {
+  background-color: #ffffff;
+  align-self: flex-start;
+  text-align: left;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.name {
+  font-weight: bold;
+  color: #0078d7;
+  margin-bottom: 5px;
+}
+input {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+  border-radius: 30px;
+  border: none;
+  width: 300px;
+  display: inline-block;
+  margin: auto;
+  max-width: 300px;
+}
+
+/* هنا تم توحيد كل ستايلات الأزرار لتجنب التضارب */
+button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  margin: 5px;
+  font-size: 16px;
+  color: black;
+  background-color: #f1f1f1;
+}
+
+button:hover {
+  background-image: linear-gradient(to right, yellow, orange);
+  color: white;
+}
+
+#sendBtn, #recordBtn, #stopBtn, #avatarBtn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+  background-color: whitesmoke;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dropdown button, .dropdown .dropbtn {
   background-color: #f1f1f1;
   border: none;
   padding: 12px 16px;
   width: fit-content;
-  height: fit-content;
   text-align: left;
+  line-height: 1;
+  border-radius: 50px;
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  border: 1px solid #ccc;
+  color: #333;
+  font-size: 16px;
 }
-.navbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.2); 
-      backdrop-filter: blur(30px);          
-      -webkit-backdrop-filter: blur(30px);  
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border: 2px solid black;
-    }
-    .navbar img.logo {
-      width: 150px;
-      height: 120px;
-      margin-right: 20px;
-    }
-
-    #chat {
-      background-image: url(bg.png);
-      border: 3px solid #ccc;
-      height: 270px;
-      width: 100%;
-      max-width: 980px;
-      overflow-y: auto;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-    }
-    .message {
-      padding: 10px;
-      border-radius: 10px;
-      margin: 5px 0;
-      max-width: 60%;
-      min-width: 300px;
-      word-wrap: break-word;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      color: black;
-      animation: fadeIn 0.5s ease forwards;
-    }
-    .message.you {
-      background-color: #00eeff;
-      align-self: flex-end;
-      text-align: right;
-    }
-    .message.other {
-      background-color: #ffffff;
-      align-self: flex-start;
-      text-align: left;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .name {
-      font-weight: bold;
-      color: #0078d7;
-      margin-bottom: 5px;
-    }
-    input {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 30px;
-      border: none;
-      width: 300px;
-      display: inline-block;
-      margin: auto;
-      max-width: 300px;
-    }
-    button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 500px;
-      border: none;
-      width: 70px;
-      color: black;
-      cursor: pointer;
-    }
-    button:hover {
-      background-image: linear-gradient(to right, yellow, orange);
-      color: white;
-    }
-    #name, #messages {
-      width: 40%;
-      background-color: white;
-      color: black;
-      font-size: 30px;
-    }
-    #avatarBtn {
-      background-color: whitesmoke;
-      border: none;
-      margin-top: 20px;
-    }
-    img {
-      width: 50px;
-      height: fit-content;
-    }
-    img:hover {
-      cursor: pointer;
-    }
+.dropdown .dropbtn:hover {
+  background-color: #ddd;
+}
+.navbar .dropdown {
+  width: fit-content;
+}
+#name, #messages {
+  width: 40%;
+  background-color: white;
+  color: black;
+  font-size: 30px;
+}
+img {
+  width: 50px;
+  height: fit-content;
+}
+img:hover {
+  cursor: pointer;
+}
