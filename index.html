@@ -49,343 +49,374 @@
 <h3>by devoloper of Dalifos: David</h3>
 <script>
 window.addEventListener("DOMContentLoaded", () => {
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  if (isSafari) {
-    const warning = document.createElement("div");
-    warning.textContent = "⚠️ Safari is not supported. Please use Chrome, Firefox, or Edge for the best experience.";
-    warning.style.backgroundColor = "#ffcc00";
-    warning.style.color = "black";
-    warning.style.padding = "10px";
-    warning.style.borderRadius = "10px";
-    warning.style.marginBottom = "10px";
-    warning.style.fontWeight = "bold";
-    document.body.insertBefore(warning, document.body.firstChild);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) {
+    const warning = document.createElement("div");
+    warning.textContent = "⚠️ Safari is not supported. Please use Chrome, Firefox, or Edge for the best experience.";
+    warning.style.backgroundColor = "#ffcc00";
+    warning.style.color = "black";
+    warning.style.padding = "10px";
+    warning.style.borderRadius = "10px";
+    warning.style.marginBottom = "10px";
+    warning.style.fontWeight = "bold";
+    document.body.insertBefore(warning, document.body.firstChild);
+  }
+
+  if ('Notification' in window) {
+      Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+              console.log("تم منح الإذن للإشعارات.");
+          } else if (permission === 'denied') {
+              console.log("تم رفض إذن الإشعارات.");
+          }
+      });
+  }
+  
+  function showNotification(title, body) {
+      if (Notification.permission === 'granted') {
+          const notification = new Notification(title, {
+              body: body,
+              icon: 'https://dodo-e.github.io/dalifos-website/logo.png',
+              silent: true
+          });
+
+          notification.onclick = function() {
+              window.focus();
+          };
+      }
+  }
+ 
+  // ------------------------------------------------------------------
+  //  دالة جديدة ومعدلة لتشغيل الصوت
+  // ------------------------------------------------------------------
+  const audio = new Audio('notifacation.mp3');
+
+  function playNotificationSound() {
+      audio.currentTime = 0; // إعادة الصوت من البداية
+      audio.play().catch(e => console.error("Error playing sound:", e));
   }
 
-  const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
-  const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
-  const client = window.supabase.createClient(supabaseUrl, anonKey);
+  const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
+  const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
+  const client = window.supabase.createClient(supabaseUrl, anonKey);
 
-  const savedName = localStorage.getItem("chat_name");
-  const savedAvatar = localStorage.getItem("chat_avatar");
+  const savedName = localStorage.getItem("chat_name");
+  const savedAvatar = localStorage.getItem("chat_avatar");
 
-  if (savedName) {
-    document.getElementById("name").value = savedName;
-  }
-  
-  // دالة لعرض رسالة في الشات
-  function displayMessage(msg) {
-      const nameInput = document.getElementById("name").value.trim() || "Anonymous";
-      const isMyMessage = msg.name === nameInput;
+  if (savedName) {
+    document.getElementById("name").value = savedName;
+  }
+  
+  function displayMessage(msg) {
+    const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+    const isMyMessage = msg.name === nameInput;
 
-      const chat = document.getElementById("chat");
-      const msgDiv = document.createElement("div");
-      msgDiv.className = isMyMessage ? "message you" : "message other";
-      
-      const nameDiv = document.createElement("div");
-      nameDiv.className = "name";
-      nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
-      
-      if (msg.avatar) {
-          const avatarImg = document.createElement("img");
-          avatarImg.src = msg.avatar;
-          avatarImg.style.width = "40px";
-          avatarImg.style.height = "40px";
-          avatarImg.style.borderRadius = "50%";
-          avatarImg.style.marginRight = "10px";
-          nameDiv.prepend(avatarImg);
-      }
-      
-      const messageDiv = document.createElement("div");
-      messageDiv.textContent = msg.message;
-      
-      msgDiv.appendChild(nameDiv);
-      msgDiv.appendChild(messageDiv);
-      chat.appendChild(msgDiv);
-      chat.scrollTop = chat.scrollHeight;
-  }
+    const chat = document.getElementById("chat");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = isMyMessage ? "message you" : "message other";
+    
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "name";
+    nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
+    
+    if (msg.avatar) {
+      const avatarImg = document.createElement("img");
+      avatarImg.src = msg.avatar;
+      avatarImg.style.width = "40px";
+      avatarImg.style.height = "40px";
+      avatarImg.style.borderRadius = "50%";
+      avatarImg.style.marginRight = "10px";
+      nameDiv.prepend(avatarImg);
+    }
+    
+    const messageDiv = document.createElement("div");
+    messageDiv.textContent = msg.message;
+    
+    msgDiv.appendChild(nameDiv);
+    msgDiv.appendChild(messageDiv);
+    chat.appendChild(msgDiv);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-  // دالة جديدة لجلب الرسائل القديمة من Supabase عند تحميل الصفحة
-  async function fetchOldMessages() {
-      try {
-          const { data, error } = await client
-              .from('messages')
-              .select('*')
-              .order('timestamp', { ascending: true }); // ترتيب الرسائل من الأقدم للأحدث
+  async function fetchOldMessages() {
+    try {
+      const { data, error } = await client
+          .from('messages')
+          .select('*')
+          .order('timestamp', { ascending: true });
 
-          if (error) {
-              console.error("Error fetching old messages:", error);
-              return;
-          }
+      if (error) {
+          console.error("Error fetching old messages:", error);
+          return;
+      }
 
-          if (data) {
-              // عرض كل رسالة تم جلبها
-              data.forEach(msg => displayMessage(msg));
-          }
-      } catch (err) {
-          console.error("An unexpected error occurred while fetching messages:", err);
-      }
-  }
+      if (data) {
+          data.forEach(msg => displayMessage(msg));
+      }
+    } catch (err) {
+      console.error("An unexpected error occurred while fetching messages:", err);
+    }
+  }
 
-  // استدعاء الدالة عند تحميل الصفحة لجلب الرسائل القديمة
-  fetchOldMessages();
+  fetchOldMessages();
 
-  const badWords = ["fuck", "asshole", "mad" , "idiot", "stupid", "dumb", "dogs", "fouls", "fool","كلب", "غبي", "أحمق", "أبله", "أهبل", "مجنون", "حمار", "أحمق", "غبي جدا", "أبله جدا", "أهبل جدا", "مجنون جدا", "حمار جدا", "أنت غبي", "أنت أحمق", "أنت أبله", "أنت أهبل", "أنت مجنون", "أنت حمار","🤮","💩","🖕🏼"];
-  const violations = JSON.parse(localStorage.getItem("violations")) || {};
+  const badWords = ["fuck", "asshole", "mad" , "idiot", "stupid", "dumb", "dogs", "fouls", "fool","كلب", "غبي", "أحمق", "أبله", "أهبل", "مجنون", "حمار", "أحمق", "غبي جدا", "أبله جدا", "أهبل جدا", "مجنون جدا", "حمار جدا", "أنت غبي", "أنت أحمق", "أنت أبله", "أنت أهبل", "أنت مجنون", "أنت حمار","🤮","💩","🖕🏼"];
+  const violations = JSON.parse(localStorage.getItem("violations")) || {};
 
-  client
-    .channel('messages-realtime')
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages'
-      },
-      (payload) => {
-        const msg = payload.new;
-        const nameInput = document.getElementById("name").value.trim() || "Anonymous";
-        
-        // عرض الرسائل الأخرى فقط، لأن رسالتك أنت يتم عرضها مباشرة عند الإرسال
-        if (msg.name !== nameInput) {
-             displayMessage(msg);
-        }
-      }
-    )
-    .subscribe();
+  client
+    .channel('messages-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages'
+      },
+      (payload) => {
+        const msg = payload.new;
+        const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+        
+        if (msg.name !== nameInput) {
+            displayMessage(msg);
+            showNotification("رسالة جديدة من " + msg.name, msg.message);
+            playNotificationSound();
+        }
+      }
+    )
+    .subscribe();
 
-  let mediaRecorder;
-  let audioChunks = [];
-  let currentUser = "";
+  let mediaRecorder;
+  let audioChunks = [];
+  let currentUser = "";
 
-  document.getElementById("recordBtn").addEventListener("click", async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mimeType = MediaRecorder.isTypeSupported('audio/ogg') ? 'audio/ogg' : 'audio/webm';
-      mediaRecorder = new MediaRecorder(stream, { mimeType });
-      audioChunks = [];
+  document.getElementById("recordBtn").addEventListener("click", async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = MediaRecorder.isTypeSupported('audio/ogg') ? 'audio/ogg' : 'audio/webm';
+      mediaRecorder = new MediaRecorder(stream, { mimeType });
+      audioChunks = [];
 
-      mediaRecorder.ondataavailable = event => {
-        audioChunks.push(event.data);
-      };
+      mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+      };
 
-      mediaRecorder.start();
-      console.log("🎙️ Recording started");
-    } catch (err) {
-      alert("❌ Microphone access is required to record audio.");
-    }
-  });
+      mediaRecorder.start();
+      console.log("🎙️ Recording started");
+    } catch (err) {
+      alert("❌ Microphone access is required to record audio.");
+    }
+  });
 
-  document.getElementById("stopBtn").addEventListener("click", () => {
-    if (!mediaRecorder || mediaRecorder.state !== "recording") {
-      alert("❌ You must start recording before stopping.");
-      return;
-    }
+  document.getElementById("stopBtn").addEventListener("click", () => {
+    if (!mediaRecorder || mediaRecorder.state !== "recording") {
+      alert("❌ You must start recording before stopping.");
+      return;
+    }
 
-    mediaRecorder.stop();
-    console.log("🛑 Recording stopped");
+    mediaRecorder.stop();
+    console.log("🛑 Recording stopped");
 
-    mediaRecorder.onstop = async () => {
-      const mimeType = mediaRecorder.mimeType;
-      const extension = mimeType.includes('ogg') ? 'ogg' : 'webm';
-      const audioBlob = new Blob(audioChunks, { type: mimeType });
+    mediaRecorder.onstop = async () => {
+      const mimeType = mediaRecorder.mimeType;
+      const extension = mimeType.includes('ogg') ? 'ogg' : 'webm';
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
 
-      if (audioBlob.size === 0) {
-        alert("❌ The audio file is empty and cannot be uploaded.");
-        return;
-      }
+      if (audioBlob.size === 0) {
+        alert("❌ The audio file is empty and cannot be uploaded.");
+        return;
+      }
 
-      let fileName = `voice_${Date.now()}.${extension}`;
-      fileName = fileName.replace(/[^a-zA-Z0-9_\u0600-\u06FF.]/g, '_');
+      let fileName = `voice_${Date.now()}.${extension}`;
+      fileName = fileName.replace(/[^a-zA-Z0-9_\u0600-\u06FF.]/g, '_');
 
-      const { data: uploadData, error: uploadError } = await client.storage
-        .from('voice_notes')
-        .upload(fileName, audioBlob, {
-          contentType: mimeType
-        });
+      const { data: uploadData, error: uploadError } = await client.storage
+        .from('voice_notes')
+        .upload(fileName, audioBlob, {
+          contentType: mimeType
+        });
 
-      if (uploadError || !uploadData) {
-        alert("❌ Upload failed. Please report this error: " + (uploadError?.message || "Unknown error"));
-        return;
-      }
+      if (uploadError || !uploadData) {
+        alert("❌ Upload failed. Please report this error: " + (uploadError?.message || "Unknown error"));
+        return;
+      }
 
-      const { data: publicData, error: publicUrlError } = client.storage
-        .from('voice_notes')
-        .getPublicUrl(fileName);
+      const { data: publicData, error: publicUrlError } = client.storage
+        .from('voice_notes')
+        .getPublicUrl(fileName);
 
-      if (publicUrlError || !publicData?.publicUrl) {
-        alert("❌ Failed to get public URL. Please report this error.");
-        return;
-      }
+      if (publicUrlError || !publicData?.publicUrl) {
+        alert("❌ Failed to get public URL. Please report this error.");
+        return;
+      }
 
-      const publicUrl = publicData.publicUrl;
-      const nameInput = document.getElementById("name").value.trim();
-      currentUser = nameInput || "Anonymous";
+      const publicUrl = publicData.publicUrl;
+      const nameInput = document.getElementById("name").value.trim();
+      currentUser = nameInput || "Anonymous";
 
-      const { error: dbError } = await client
-        .from('voice_messages')
-        .insert([
-          {
-            name: currentUser,
-            audio_url: publicUrl,
-            timestamp: new Date().toISOString()
-          }
-        ]);
+      const { error: dbError } = await client
+        .from('voice_messages')
+        .insert([
+          {
+            name: currentUser,
+            audio_url: publicUrl,
+            timestamp: new Date().toISOString()
+          }
+        ]);
 
-      if (dbError) {
-        alert("❌ Failed to save message. Please report this error: " + dbError.message);
-        return;
-      }
+      if (dbError) {
+        alert("❌ Failed to save message. Please report this error: " + dbError.message);
+        return;
+      }
 
-      const chat = document.getElementById("chat");
-      const msgDiv = document.createElement("div");
-      msgDiv.className = "message you";
+      const chat = document.getElementById("chat");
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "message you";
 
-      const nameDiv = document.createElement("div");
-      nameDiv.className = "name";
-      nameDiv.textContent = currentUser + " • " + new Date().toLocaleTimeString();
+      const nameDiv = document.createElement("div");
+      nameDiv.className = "name";
+      nameDiv.textContent = currentUser + " • " + new Date().toLocaleTimeString();
 
-      const audioPlayer = document.createElement("audio");
-      audioPlayer.controls = true;
-      audioPlayer.style.width = "100%";
+      const audioPlayer = document.createElement("audio");
+      audioPlayer.controls = true;
+      audioPlayer.style.width = "100%";
 
-      const source = document.createElement("source");
-      source.src = publicUrl;
-      source.type = mimeType;
+      const source = document.createElement("source");
+      source.src = publicUrl;
+      source.type = mimeType;
 
-      audioPlayer.appendChild(source);
-      audioPlayer.innerHTML += "Your browser does not support audio playback.";
+      audioPlayer.appendChild(source);
+      audioPlayer.innerHTML += "Your browser does not support audio playback.";
 
-      msgDiv.appendChild(nameDiv);
-      msgDiv.appendChild(audioPlayer);
-      chat.appendChild(msgDiv);
-      chat.scrollTop = chat.scrollHeight;
-    };
-  });
+      msgDiv.appendChild(nameDiv);
+      msgDiv.appendChild(audioPlayer);
+      chat.appendChild(msgDiv);
+      chat.scrollTop = chat.scrollHeight;
+    };
+  });
 
-  document.getElementById("avatarBtn").addEventListener("click", () => {
-    document.getElementById("avatar").click();
-  });
+  document.getElementById("avatarBtn").addEventListener("click", () => {
+    document.getElementById("avatar").click();
+  });
 
-  document.getElementById("sendBtn").addEventListener("click", async () => {
-    const nameInput = document.getElementById("name").value.trim();
-    const messageInput = document.getElementById("messages").value.trim();
-    const avatarFile = document.getElementById("avatar").files[0];
+  document.getElementById("sendBtn").addEventListener("click", async () => {
+    const nameInput = document.getElementById("name").value.trim();
+    const messageInput = document.getElementById("messages").value.trim();
+    const avatarFile = document.getElementById("avatar").files[0];
 
-    if (!messageInput) {
-      alert("❌ you must enter a message before sending.");
-      return;
-    }
+    if (!messageInput) {
+      alert("❌ you must enter a message before sending.");
+      return;
+    }
 
-    const name = nameInput || "Anonymous";
-    const lowerMessage = messageInput.toLowerCase();
-    const containsBadWord = badWords.some(word => lowerMessage.includes(word));
-    const userViolations = violations[name] || { count: 0, bannedUntil: null };
-    const now = Date.now();
+    const name = nameInput || "Anonymous";
+    const lowerMessage = messageInput.toLowerCase();
+    const containsBadWord = badWords.some(word => lowerMessage.includes(word));
+    const userViolations = violations[name] || { count: 0, bannedUntil: null };
+    const now = Date.now();
 
-    if (userViolations.bannedUntil && now < userViolations.bannedUntil) {
-      alert("❌ you are currently banned from sending messages. Please wait 5 minutes until the ban expires.");
-      return;
-    }
+    if (userViolations.bannedUntil && now < userViolations.bannedUntil) {
+      alert("❌ you are currently banned from sending messages. Please wait 5 minutes until the ban expires.");
+      return;
+    }
 
-    if (containsBadWord) {
-      userViolations.count += 1;
+    if (containsBadWord) {
+      userViolations.count += 1;
 
-      if (userViolations.count === 1) {
-        alert("⚠️ inappropriate language detected. This is your first warning.after 3 warnings, you will be banned for 5 minutes.");
-      } else if (userViolations.count >= 3) {
-        userViolations.bannedUntil = now + 5 * 60 * 1000;
-        alert("🚫 you are banned from using massaging for 5 minutes because of using inappropriate words a lot");
-        await client
-          .from('messages')
-          .insert([
-            {
-              name: "🚨 system",
-              message: `${name} is banned for using inappropriate language.`,
-              avatar: "",
-              timestamp: new Date().toISOString()
-            }
-          ]);
-        violations[name] = userViolations;
-        localStorage.setItem("violations", JSON.stringify(violations));
-        return;
-      }
+      if (userViolations.count === 1) {
+        alert("⚠️ inappropriate language detected. This is your first warning.after 3 warnings, you will be banned for 5 minutes.");
+      } else if (userViolations.count >= 3) {
+        userViolations.bannedUntil = now + 5 * 60 * 1000;
+        alert("🚫 you are banned from using massaging for 5 minutes because of using inappropriate words a lot");
+        await client
+          .from('messages')
+          .insert([
+            {
+              name: "🚨 system",
+              message: `${name} is banned for using inappropriate language.`,
+              avatar: "",
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        violations[name] = userViolations;
+        localStorage.setItem("violations", JSON.stringify(violations));
+        return;
+      }
 
-      violations[name] = userViolations;
-      localStorage.setItem("violations", JSON.stringify(violations));
-    }
+      violations[name] = userViolations;
+      localStorage.setItem("violations", JSON.stringify(violations));
+    }
 
-    let avatarUrl = "";
+    let avatarUrl = "";
 
-    if (avatarFile) {
-      const avatarFileName = `avatar_${Date.now()}_${avatarFile.name}`.replace(/[^a-zA-Z0-9_.]/g, '_');
+    if (avatarFile) {
+      const avatarFileName = `avatar_${Date.now()}_${avatarFile.name}`.replace(/[^a-zA-Z0-9_.]/g, '_');
 
-      const { data: uploadData, error: uploadError } = await client.storage
-        .from('avatars')
-        .upload(avatarFileName, avatarFile, {
-          contentType: avatarFile.type
-        });
+      const { data: uploadData, error: uploadError } = await client.storage
+        .from('avatars')
+        .upload(avatarFileName, avatarFile, {
+          contentType: avatarFile.type
+        });
 
-      if (uploadError) {
-        alert("❌ error uploading avatar.report this error: " + uploadError.message);
-        return;
-      }
+      if (uploadError) {
+        alert("❌ error uploading avatar.report this error: " + uploadError.message);
+        return;
+      }
 
-      const { data: publicData } = client.storage
-        .from('avatars')
-        .getPublicUrl(avatarFileName);
+      const { data: publicData } = client.storage
+        .from('avatars')
+        .getPublicUrl(avatarFileName);
 
-      avatarUrl = publicData.publicUrl;
-    }
+      avatarUrl = publicData.publicUrl;
+    }
 
-    const { error: dbError } = await client
-      .from('messages')
-      .insert([
-        {
-          name: name,
-          message: messageInput,
-          avatar: avatarUrl,
-          timestamp: new Date().toISOString()
-        }
-      ]);
+    const { error: dbError } = await client
+      .from('messages')
+      .insert([
+        {
+          name: name,
+          message: messageInput,
+          avatar: avatarUrl,
+          timestamp: new Date().toISOString()
+        }
+      ]);
 
-    if (dbError) {
-      alert("❌ error saving massege.report this problem " + dbError.message);
-      return;
-    }
+    if (dbError) {
+      alert("❌ error saving massege.report this problem " + dbError.message);
+      return;
+    }
 
-    localStorage.setItem("chat_name", name);
-    localStorage.setItem("chat_avatar", avatarUrl);
+    localStorage.setItem("chat_name", name);
+    localStorage.setItem("chat_avatar", avatarUrl);
 
-    const chat = document.getElementById("chat");
-    const msgDiv = document.createElement("div");
-    msgDiv.className = "message you";
+    const chat = document.getElementById("chat");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "message you";
 
-    const nameDiv = document.createElement("div");
-    nameDiv.className = "name";
-    nameDiv.textContent = name + " • " + new Date().toLocaleTimeString();
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "name";
+    nameDiv.textContent = name + " • " + new Date().toLocaleTimeString();
 
-    if (avatarUrl) {
-      const avatarImg = document.createElement("img");
-      avatarImg.src = avatarUrl;
-      avatarImg.style.width = "50px";
-      avatarImg.style.height = "50px";
-      avatarImg.style.borderRadius = "100%";
-      avatarImg.style.marginRight = "10px";
-      nameDiv.prepend(avatarImg);
-    }
+    if (avatarUrl) {
+      const avatarImg = document.createElement("img");
+      avatarImg.src = avatarUrl;
+      avatarImg.style.width = "50px";
+      avatarImg.style.height = "50px";
+      avatarImg.style.borderRadius = "100%";
+      avatarImg.style.marginRight = "10px";
+      nameDiv.prepend(avatarImg);
+    }
 
-    const messageDiv = document.createElement("div");
-    messageDiv.textContent = messageInput;
+    const messageDiv = document.createElement("div");
+    messageDiv.textContent = messageInput;
 
-    msgDiv.appendChild(nameDiv);
-    msgDiv.appendChild(messageDiv);
-    chat.appendChild(msgDiv);
-    chat.scrollTop = chat.scrollHeight;
+    msgDiv.appendChild(nameDiv);
+    msgDiv.appendChild(messageDiv);
+    chat.appendChild(msgDiv);
+    chat.scrollTop = chat.scrollHeight;
 
-    document.getElementById("messages").value = "";
-    document.getElementById("avatar").value = "";
-  });
+    document.getElementById("messages").value = "";
+    document.getElementById("avatar").value = "";
+  });
 });
 </script>
 </body>
