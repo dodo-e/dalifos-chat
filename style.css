@@ -5,17 +5,17 @@
       text-align: center;
       color: white;
     } 
-button,
-input[type="submit"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  padding: 10px 20px;
-  margin: 0;
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-font-smoothing: antialiased; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    margin: 0;
 }
 .dropdown {
   position: relative; 
