@@ -5,7 +5,6 @@
       text-align: center;
       color: white;
     }
-    /* Container for the dropdown */
 .dropdown {
   position: relative; 
   display: inline-block;
@@ -78,6 +77,9 @@
       width: 150px;
       height: 120px;
       margin-right: 20px;
+    }
+    .navbar button {
+      height: fit-content;
     }
     #chat {
       background-image: url(bg.png);
