@@ -93,10 +93,11 @@ body {
   word-wrap: break-word;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   color: black;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   animation: fadeIn 0.5s ease forwards;
 }
 .message.you {
-  background-color: #00eeff;
+  background-color: #00e1f1;
   align-self: flex-end;
   text-align: right;
 }
@@ -111,13 +112,14 @@ body {
 }
 .name {
   font-weight: bold;
-  color: #0078d7;
+  color: #919191;
   margin-bottom: 5px;
 }
 input {
   padding: 10px;
-  margin: 5px;
-  font-size: 16px;
+  margin-top: -20px;
+  font-size: 10px;
+  height: 20px;
   border-radius: 30px;
   border: none;
   width: 300px;
@@ -143,9 +145,10 @@ button:hover {
   color: white;
 }
 
-#sendBtn, #recordBtn, #stopBtn, #avatarBtn {
-  width: 50px;
-  height: 50px;
+#sendBtn, #recordBtn, #stopBtn, #avatarBtn, #soundButton {
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
   border-radius: 50%;
   padding: 0;
   background-color: whitesmoke;
@@ -187,7 +190,7 @@ button:hover {
   font-size: 30px;
 }
 img {
-  width: 50px;
+  width: 40px;
   height: fit-content;
 }
 img:hover {

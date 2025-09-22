@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dalifos© Chat (Beta Release)</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="style.css">
-  <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+  <meta charset="UTF-8">
+  <title>Dalifos© Chat (Beta Release)</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <div class="h-captcha" data-sitekey="af704ee4-e85a-49d4-8362-9f8ac2b862be"></div>
 </head>
 <body>
-  <div class="navbar">
-    <img src="logo.png" alt="Dalifos Logo" class="logo">
-    <h1>Dalifos© Chat Beta</h1>
+  <div class="navbar">
+    <img src="logo.png" alt="Dalifos Logo" class="logo">
+    <h1>Dalifos© Chat Beta</h1>
 <div class="dropdown">
-  <button class="dropbtn">chats</button>
-  <div class="dropdown-content">
-    <a href="#"title="private chat (not created)"style="cursor: not-allowed;"><img src="private-message-svgrepo-com.svg"> >private chat(not created)</a>
-    <a href="#"title="private group (not created)" style="cursor: not-allowed;"><img src="group-chat-svgrepo-com.svg">private group chat(not created)</a>
-    <a href="index.html"title="public chat"><img src="public-opened-svgrepo-com.svg">public chat </a>
-  </div>
+  <button class="dropbtn">chats</button>
+  <div class="dropdown-content">
+    <a href="#"title="private chat"style="cursor: not-allowed;"><img src="private-message-svgrepo-com.svg"> >private chat(not created)</a>
+    <a href="#"title="private group (not created)" style="cursor: not-allowed;"><img src="group-chat-svgrepo-com.svg">private group chat(not created)</a>
+    <a href="index.html"title="public chat"><img src="public-opened-svgrepo-com.svg">public chat </a>
+  </div>
 </div>
 <br>
 <br>
 <br>
-    <div class="dropdown">
-  <button class="dropbtn">Dalifos© progects</button>
-  <div class="dropdown-content">
-    <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="logo main.png">Dalifos© web</a>
-    <a href="index.html"title="Dalifos© chat"><img src="public-opened-svgrepo-com.svg">Dalifos© chat</a>
-  </div> 
+    <div class="dropdown">
+  <button class="dropbtn">Dalifos© progects</button>
+  <div class="dropdown-content">
+    <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="logo main.png">Dalifos© web</a>
+    <a href="index.html"title="Dalifos© chat"><img src="public-opened-svgrepo-com.svg">Dalifos© chat</a>
+  </div> 
 </div>
-     <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"> <button><img src="error-svgrepo-com.svg"></button></a>
-  </div>
-<h2>💬 Dalifos Chat Beta 2</h2>
+    <div class="dropdown">
+  <button class="dropbtn">options</button>
+  <div class="dropdown-content">
+        <a href="whats new in Dalifos chat.html" title="what's new in Dalifos chat"><img src="logo.png">what's new</a>
+       <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"><img src="error-svgrepo-com.svg">report errors</a>
+  </div> 
+</div>
+  </div>
+<h2>💬 Dalifos Chat Beta 3</h2>
 <div id="chat"></div>
 <br>
 <br>
 <input type="file" id="avatar" accept="image/*" style="display: none;">
 <button type="button" id="avatarBtn" title="Choose an avatar (optional)">
-  <img src="avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon" />
+  <img src="avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon" />
 </button>
 <input type="text" id="name" placeholder="Your name" title="Enter your name">
 <input type="text" id="messages" placeholder="Type a message" title="Type your message here">
@@ -45,6 +53,7 @@
 <br><br>
 <button id="recordBtn"><img src="play-svgrepo-com.svg"></button>
 <button id="stopBtn"><img src="stop-circle-svgrepo-com.svg"></button>
+<button id="soundButton"><img src="notification-bell-svgrepo-com.svg"></button>
 <h3>note:this website is beta, so if you see an error.please report it/do not share any personal data because some data may be seen by company</h3>
 <h3>by devoloper of Dalifos: David</h3>
 <script>
@@ -52,7 +61,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   if (isSafari) {
     const warning = document.createElement("div");
-    warning.textContent = "⚠️ Safari is not supported. Please use Chrome, Firefox, or Edge for the best experience.";
+    warning.textContent = "⚠️ Iphone is beta. Please use android for the best experience.";
     warning.style.backgroundColor = "#ffcc00";
     warning.style.color = "black";
     warning.style.padding = "10px";
@@ -85,16 +94,15 @@ window.addEventListener("DOMContentLoaded", () => {
           };
       }
   }
- 
-  // ------------------------------------------------------------------
-  //  دالة جديدة ومعدلة لتشغيل الصوت
-  // ------------------------------------------------------------------
-  const audio = new Audio('notifacation.mp3');
+ 
+  const audio = new Audio('notifacation.mp3');
 
-  function playNotificationSound() {
-      audio.currentTime = 0; // إعادة الصوت من البداية
-      audio.play().catch(e => console.error("Error playing sound:", e));
-  }
+  function playNotificationSound() {
+      audio.currentTime = 0; 
+      audio.play().catch(e => console.error("Error playing sound:", e));
+  }
+  
+  const bellSound = new Audio('bell.mp3'); 
 
   const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
   const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
@@ -302,7 +310,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("name").value.trim();
     const messageInput = document.getElementById("messages").value.trim();
     const avatarFile = document.getElementById("avatar").files[0];
+    const hcaptchaToken = hcaptcha.getResponse();
 
+    if (!hcaptchaToken) {
+      alert("❌ Please complete the security check (I'm not a robot).");
+      return;
+    }
+  
     if (!messageInput) {
       alert("❌ you must enter a message before sending.");
       return;
@@ -316,106 +330,85 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (userViolations.bannedUntil && now < userViolations.bannedUntil) {
       alert("❌ you are currently banned from sending messages. Please wait 5 minutes until the ban expires.");
-      return;
+      return; 
     }
 
     if (containsBadWord) {
       userViolations.count += 1;
-
       if (userViolations.count === 1) {
         alert("⚠️ inappropriate language detected. This is your first warning.after 3 warnings, you will be banned for 5 minutes.");
       } else if (userViolations.count >= 3) {
         userViolations.bannedUntil = now + 5 * 60 * 1000;
         alert("🚫 you are banned from using massaging for 5 minutes because of using inappropriate words a lot");
-        await client
-          .from('messages')
-          .insert([
-            {
-              name: "🚨 system",
-              message: `${name} is banned for using inappropriate language.`,
-              avatar: "",
-              timestamp: new Date().toISOString()
-            }
-          ]);
-        violations[name] = userViolations;
-        localStorage.setItem("violations", JSON.stringify(violations));
-        return;
       }
-
       violations[name] = userViolations;
       localStorage.setItem("violations", JSON.stringify(violations));
+      return; 
     }
 
     let avatarUrl = "";
-
     if (avatarFile) {
       const avatarFileName = `avatar_${Date.now()}_${avatarFile.name}`.replace(/[^a-zA-Z0-9_.]/g, '_');
-
       const { data: uploadData, error: uploadError } = await client.storage
         .from('avatars')
         .upload(avatarFileName, avatarFile, {
           contentType: avatarFile.type
         });
-
       if (uploadError) {
         alert("❌ error uploading avatar.report this error: " + uploadError.message);
         return;
       }
-
       const { data: publicData } = client.storage
         .from('avatars')
         .getPublicUrl(avatarFileName);
-
       avatarUrl = publicData.publicUrl;
     }
 
-    const { error: dbError } = await client
-      .from('messages')
-      .insert([
-        {
-          name: name,
-          message: messageInput,
-          avatar: avatarUrl,
-          timestamp: new Date().toISOString()
-        }
-      ]);
+    const response = await fetch('https://auojqvmbgbpfkoatkvkl.supabase.co/functions/v1/verify-captcha', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        hcaptchaToken: hcaptchaToken,
+        message: messageInput,
+        name: name,
+        avatar: avatarUrl
+      })
+    });
 
-    if (dbError) {
-      alert("❌ error saving massege.report this problem " + dbError.message);
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert("❌ Failed to send message: " + (errorData.error || "Unknown error"));
       return;
     }
-
-    localStorage.setItem("chat_name", name);
-    localStorage.setItem("chat_avatar", avatarUrl);
-
-    const chat = document.getElementById("chat");
-    const msgDiv = document.createElement("div");
-    msgDiv.className = "message you";
-
-    const nameDiv = document.createElement("div");
-    nameDiv.className = "name";
-    nameDiv.textContent = name + " • " + new Date().toLocaleTimeString();
-
-    if (avatarUrl) {
-      const avatarImg = document.createElement("img");
-      avatarImg.src = avatarUrl;
-      avatarImg.style.width = "50px";
-      avatarImg.style.height = "50px";
-      avatarImg.style.borderRadius = "100%";
-      avatarImg.style.marginRight = "10px";
-      nameDiv.prepend(avatarImg);
-    }
-
-    const messageDiv = document.createElement("div");
-    messageDiv.textContent = messageInput;
-
-    msgDiv.appendChild(nameDiv);
-    msgDiv.appendChild(messageDiv);
-    chat.appendChild(msgDiv);
-    chat.scrollTop = chat.scrollHeight;
-
+    
     document.getElementById("messages").value = "";
     document.getElementById("avatar").value = "";
+
+  });
+  
+  const soundButton = document.getElementById('soundButton');
+
+  client.channel('chat-events')
+    .on('broadcast', { event: 'ring-bell' }, (payload) => {
+      bellSound.play().catch(e => console.error("Error playing bell sound:", e));
+      console.log('🔔 Received bell ring from:', payload.name);
+    })
+    .subscribe();
+
+  soundButton.addEventListener('click', async () => {
+    const name = document.getElementById("name").value.trim() || "Anonymous";
+    
+    const { error } = await client.channel('chat-events').send({
+      type: 'broadcast',
+      event: 'ring-bell',
+      payload: { name: name }
+    });
+
+    if (error) {
+      console.error('Error sending bell broadcast:', error);
+    }
   });
 });
 </script>
