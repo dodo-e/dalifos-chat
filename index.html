@@ -360,6 +360,7 @@ window.addEventListener("DOMContentLoaded", () => {
         alert("❌ error uploading avatar.report this error: " + uploadError.message);
         return;
       }
+
       const { data: publicData } = client.storage
         .from('avatars')
         .getPublicUrl(avatarFileName);
