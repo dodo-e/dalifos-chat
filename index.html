@@ -310,12 +310,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("name").value.trim();
     const messageInput = document.getElementById("messages").value.trim();
     const avatarFile = document.getElementById("avatar").files[0];
-    const hcaptchaToken = hcaptcha.getResponse();
-
-    if (!hcaptchaToken) {
-      alert("❌ Please complete the security check (I'm not a robot).");
-      return;
-    }
   
     if (!messageInput) {
       alert("❌ you must enter a message before sending.");
@@ -371,7 +365,6 @@ window.addEventListener("DOMContentLoaded", () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        hcaptchaToken: hcaptchaToken,
         message: messageInput,
         name: name,
         avatar: avatarUrl
@@ -386,7 +379,6 @@ window.addEventListener("DOMContentLoaded", () => {
     
     document.getElementById("messages").value = "";
     document.getElementById("avatar").value = "";
-    hcaptcha.reset();
 
   });
   
