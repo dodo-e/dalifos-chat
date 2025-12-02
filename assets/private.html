@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>دردشة داليفوس الخاصة</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="chat-container">
+    <h1>دردشة خاصة</h1>
+    <div id="messages-display"></div>
+    <input type="text" id="message-input" placeholder="اكتب رسالتك">
+    <button id="send-button">إرسال</button>
+</div>
+
+<script>
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // احصل على المعرف من الهاش
+    const chatId = window.location.hash.substring(1);
+
+    if (!chatId) {
+        document.getElementById('chat-container').innerHTML = "<h1>⚠️ رابط الدردشة غير صالح.</h1>";
+    } else {
+        const privateChannel = supabase.channel(chatId);
+
+        privateChannel.on('broadcast', { event: 'new-message' }, (payload) => {
+            const messagesDisplay = document.getElementById('messages-display');
+            const messageElement = document.createElement('p');
+            messageElement.textContent = payload.message;
+            messagesDisplay.appendChild(messageElement);
+        }).subscribe();
+
+        document.getElementById('send-button').addEventListener('click', async () => {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            if (message) {
+                await privateChannel.send({
+                    type: 'broadcast',
+                    event: 'new-message',
+                    payload: { message: message }
+                });
+                messageInput.value = '';
+            }
+        });
+        console.log(`تم الاتصال بالقناة: ${chatId}`);
+    }
+</script>
+
+</body>
+</html>

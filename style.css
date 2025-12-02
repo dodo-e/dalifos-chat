@@ -1,6 +1,6 @@
 body {
-  font-family: Arial, sans-serif;
-  background-image: linear-gradient(to right, #3F5EFB, #FC466B);
+  font-family: "Nunito", sans-serif;
+  background-image: linear-gradient(to left, #376bfc, #46e1fc);
   padding: 20px;
   text-align: center;
   color: white;
@@ -71,9 +71,12 @@ body {
   margin-right: 20px;
 }
 #chat {
-  background-image: url(bg.png);
+  background-image: url(assets/bg.png);
+  background-size: contain;
+  background-position: center;
   border: 3px solid #ccc;
-  height: 270px;
+  height: fit-content;
+  max-height: 300px;
   width: 100%;
   max-width: 980px;
   overflow-y: auto;
@@ -83,6 +86,11 @@ body {
   display: flex;
   flex-direction: column;
   margin: auto;
+  animation: more 0.5s infinite;
+}
+@keyframes more {
+  from { height:fit-content; }
+  to { height: fit-content; }
 }
 .message {
   padding: 10px;
@@ -195,4 +203,22 @@ img {
 }
 img:hover {
   cursor: pointer;
+  transform: scale(1.1);
+}
+
+.nunito {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.updates {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }

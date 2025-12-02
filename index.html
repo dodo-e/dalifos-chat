@@ -1,113 +1,135 @@
-<body>
+<!DOCTYPE html>
+<head>
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Dalifos© Chat (Beta Release)</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
-
-
+    <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+</head>
+<body>
     <div class="navbar">
-        <img src="logo.png" alt="Dalifos Logo" class="logo">
+        <img src="assets/logo.png" alt="Dalifos Logo" class="logo">
         <h1>Dalifos© Chat Beta</h1>
         <div class="dropdown">
             <button class="dropbtn">chats</button>
             <div class="dropdown-content">
-                <a href="#" title="private chat" style="cursor: not-allowed;"><img
-                        src="private-message-svgrepo-com.svg"> &gt;private chat (قريباً/Coming Soon)</a>
-                <a href="#" title="private group (not created)" style="cursor: not-allowed;"><img
-                        src="group-chat-svgrepo-com.svg">private group chat (قريباً/Coming Soon)</a>
-                <a href="index.html" title="public chat"><img src="public-opened-svgrepo-com.svg">public chat </a>
+            <a href="#" title="private chat" style="cursor: not-allowed;"><img
+                src="assets/private-message-svgrepo-com.svg"> &gt;private chat (Coming Soon)</a>
+            <a href="#" title="private group (not created)" style="cursor: not-allowed;"><img
+                src="assets/group-chat-svgrepo-com.svg">private group chat (comming soon)</a>
+            <a href="index.html" title="public chat"><img src="assets/public-opened-svgrepo-com.svg">public chat </a>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
         <div class="dropdown">
             <button class="dropbtn">Dalifos© progects</button>
             <div class="dropdown-content">
-                <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="logo main.png">Dalifos©
+                <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo main.png">Dalifos©
                     web</a>
-                <a href="index.html" title="Dalifos© chat"><img src="public-opened-svgrepo-com.svg">Dalifos© chat</a>
+                <a href="index.html" title="Dalifos© chat"><img src="assets/public-opened-svgrepo-com.svg">Dalifos© chat</a>
+                <a href="https://dodo-e.github.io/Dalifos-BD1/" title="Dalifos© BD1"><img src="assets/logo (2).png">Dalifos© BD1</a>
             </div>
         </div>
         <div class="dropdown">
             <button class="dropbtn">options</button>
             <div class="dropdown-content">
-                <a href="whats new in Dalifos chat.html" title="what's new in Dalifos chat"><img src="logo.png">what's
+                <a href="whats new in Dalifos chat.html" title="what's new in Dalifos chat"><img src="assets/logo.png">what's
                     new</a>
                 <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"><img
-                        src="error-svgrepo-com.svg">report errors</a>
-                <a href="channel.html" title="youtube channel"><img src="YouTube-logo.png">youtube channel</a>
+                        src="assets/error-svgrepo-com.svg">report errors</a>
+                <a href="channel.html" title="youtube channel"><img src="assets/YouTube-logo.png">youtube channel</a>
 
             </div>
         </div>
     </div>
-    <h2>💬 Dalifos Chat Beta 3</h2>
+    <h2>💬 Dalifos Chat Beta 4 💬</h2>
     <div id="chat">
         </div>
     <br>
     <br>
     <input type="file" id="avatar" accept="image/*" style="display: none;">
     <button type="button" id="avatarBtn" title="Choose an avatar (optional)">
-        <img src="avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon">
+        <img src="assets/avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon">
     </button>
     <input type="text" id="name" placeholder="Your name" title="Enter your name">
     <input type="text" id="messages" placeholder="Type a message" title="Type your message here">
-    <button id="sendBtn"><img src="send-svgrepo-com.svg" title="Send"></button>
+    <button id="sendBtn"><img src="assets/send-svgrepo-com.svg" title="Send"></button>
     <br><br>
-    <button id="recordBtn"><img src="play-svgrepo-com.svg"></button>
-    <button id="stopBtn"><img src="stop-circle-svgrepo-com.svg"></button>
-    <button id="soundButton"><img src="notification-bell-svgrepo-com.svg"></button>
-    <h3>note:this website is beta, so if you see an error.please report it/do not share any personal data because some
+    <button id="recordBtn"><img src="assets/play-svgrepo-com.svg"></button>
+    <button id="stopBtn"><img src="assets/stop-circle-svgrepo-com.svg"></button>
+    <button id="soundButton"><img src="assets/notification-bell-svgrepo-com.svg"></button>
+    <h3>note:this website is beta, so if you see an error,please report it<br>do not share any personal data because some
         data may be seen by company</h3>
-    <h3>by devoloper of Dalifos: David</h3>
+    <h3>by devoloper: Dalifos</h3>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
+            const navbar = document.querySelector(".navbar");
+            const hideBtn = document.createElement("button");
+            hideBtn.id = "hideNavbarBtn";
+            hideBtn.textContent = "☰";
+            hideBtn.style.position = "fixed";
+            hideBtn.style.top = "10px";
+            hideBtn.style.right = "10px";
+            hideBtn.style.zIndex = "1001";
+            hideBtn.style.padding = "8px 12px";
+            hideBtn.style.backgroundColor = "#333";
+            hideBtn.style.color = "#fff";
+            hideBtn.style.border = "none";
+            hideBtn.style.borderRadius = "5px";
+            hideBtn.style.cursor = "pointer";
+            document.body.appendChild(hideBtn);
+
+            hideBtn.addEventListener("click", () => {
+            navbar.style.display = navbar.style.display === "none" ? "block" : "none";
+            });
+
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             if (isSafari) {
-                const warning = document.createElement("div");
-                warning.textContent = "⚠️ Iphone is beta. Please use android for the best experience.";
-                warning.style.backgroundColor = "#ffcc00";
-                warning.style.color = "black";
-                warning.style.padding = "10px";
-                warning.style.borderRadius = "10px";
-                warning.style.marginBottom = "10px";
-                warning.style.fontWeight = "bold";
-                document.body.insertBefore(warning, document.body.firstChild);
+            const warning = document.createElement("div");
+            warning.textContent = "⚠️ Iphone is beta. Please use android for the best experience.";
+            warning.style.backgroundColor = "#ffcc00";
+            warning.style.color = "black";
+            warning.style.padding = "10px";
+            warning.style.borderRadius = "10px";
+            warning.style.marginBottom = "10px";
+            warning.style.fontWeight = "bold";
+            document.body.insertBefore(warning, document.body.firstChild);
             }
 
             if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        console.log("تم منح الإذن للإشعارات.");
-                    } else if (permission === 'denied') {
-                        console.log("تم رفض إذن الإشعارات.");
-                    }
-                });
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                console.log("تم منح الإذن للإشعارات.");
+                } else if (permission === 'denied') {
+                console.log("تم رفض إذن الإشعارات.");
+                }
+            });
             }
 
             function showNotification(title, body) {
-                if (Notification.permission === 'granted') {
-                    const notification = new Notification(title, {
-                        body: body,
-                        icon: 'https://dodo-e.github.io/dalifos-website/logo.png',
-                        silent: true
-                    });
+            if (Notification.permission === 'granted') {
+                const notification = new Notification(title, {
+                body: body,
+                icon: 'https://dodo-e.github.io/dalifos-website/logo.png',
+                silent: true
+                });
 
-                    notification.onclick = function () {
-                        window.focus();
-                    };
-                }
+                notification.onclick = function () {
+                window.focus();
+                };
+            }
             }
 
-            const audio = new Audio('notifacation.mp3');
+            const audio = new Audio('assets/notifacation.mp3');
 
             function playNotificationSound() {
-                audio.currentTime = 0;
-                audio.play().catch(e => console.error("Error playing sound:", e));
+            audio.currentTime = 0;
+            audio.play().catch(e => console.error("Error playing sound:", e));
             }
 
-            const bellSound = new Audio('bell.mp3');
+            const bellSound = new Audio('assets/bell.mp3');
 
             const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
             const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
@@ -117,58 +139,80 @@
             const savedAvatar = localStorage.getItem("chat_avatar");
 
             if (savedName) {
-                document.getElementById("name").value = savedName;
+            document.getElementById("name").value = savedName;
             }
 
             function displayMessage(msg) {
-                const nameInput = document.getElementById("name").value.trim() || "Anonymous";
-                const isMyMessage = msg.name === nameInput;
+            const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+            const isMyMessage = msg.name === nameInput;
 
-                const chat = document.getElementById("chat");
-                const msgDiv = document.createElement("div");
-                msgDiv.className = isMyMessage ? "message you" : "message other";
+            const chat = document.getElementById("chat");
+            const msgDiv = document.createElement("div");
+            msgDiv.className = isMyMessage ? "message you" : "message other";
 
-                const nameDiv = document.createElement("div");
-                nameDiv.className = "name";
-                nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
+            const nameDiv = document.createElement("div");
+            nameDiv.className = "name";
+            nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
 
-                if (msg.avatar) {
-                    const avatarImg = document.createElement("img");
-                    avatarImg.src = msg.avatar;
-                    avatarImg.style.width = "40px";
-                    avatarImg.style.height = "40px";
-                    avatarImg.style.borderRadius = "50%";
-                    avatarImg.style.marginRight = "10px";
-                    nameDiv.prepend(avatarImg);
-                }
+            if (msg.avatar) {
+                const avatarImg = document.createElement("img");
+                avatarImg.src = msg.avatar;
+                avatarImg.style.width = "40px";
+                avatarImg.style.height = "40px";
+                avatarImg.style.borderRadius = "50%";
+                avatarImg.style.marginRight = "10px";
+                nameDiv.prepend(avatarImg);
+            }
 
-                const messageDiv = document.createElement("div");
-                messageDiv.textContent = msg.message;
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = msg.message;
 
-                msgDiv.appendChild(nameDiv);
-                msgDiv.appendChild(messageDiv);
-                chat.appendChild(msgDiv);
-                chat.scrollTop = chat.scrollHeight;
+            msgDiv.appendChild(nameDiv);
+            msgDiv.appendChild(messageDiv);
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
+            }
+
+            function displaySystemMessage(message) {
+            const chat = document.getElementById("chat");
+            const msgDiv = document.createElement("div");
+            msgDiv.className = "message system";
+            msgDiv.style.backgroundColor = "#f0f0f0";
+            msgDiv.style.textAlign = "center";
+            msgDiv.style.fontStyle = "italic";
+            msgDiv.style.color = "#666";
+
+            const nameDiv = document.createElement("div");
+            nameDiv.className = "name";
+            nameDiv.textContent = "System • " + new Date().toLocaleTimeString();
+
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = message;
+
+            msgDiv.appendChild(nameDiv);
+            msgDiv.appendChild(messageDiv);
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
             }
 
             async function fetchOldMessages() {
-                try {
-                    const { data, error } = await client
-                        .from('messages')
-                        .select('*')
-                        .order('timestamp', { ascending: true });
+            try {
+                const { data, error } = await client
+                .from('messages')
+                .select('*')
+                .order('timestamp', { ascending: true });
 
-                    if (error) {
-                        console.error("Error fetching old messages:", error);
-                        return;
-                    }
-
-                    if (data) {
-                        data.forEach(msg => displayMessage(msg));
-                    }
-                } catch (err) {
-                    console.error("An unexpected error occurred while fetching messages:", err);
+                if (error) {
+                console.error("Error fetching old messages:", error);
+                return;
                 }
+
+                if (data) {
+                data.forEach(msg => displayMessage(msg));
+                }
+            } catch (err) {
+                console.error("An unexpected error occurred while fetching messages:", err);
+            }
             }
 
             fetchOldMessages();
@@ -177,250 +221,247 @@
             const violations = JSON.parse(localStorage.getItem("violations")) || {};
 
             client
-                .channel('messages-realtime')
-                .on(
-                    'postgres_changes',
-                    {
-                        event: 'INSERT',
-                        schema: 'public',
-                        table: 'messages'
-                    },
-                    (payload) => {
-                        const msg = payload.new;
-                        const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+            .channel('messages-realtime')
+            .on(
+                'postgres_changes',
+                {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'messages'
+                },
+                (payload) => {
+                const msg = payload.new;
+                const nameInput = document.getElementById("name").value.trim() || "Anonymous";
 
-                        // هذا الشرط يضمن أن المستخدم الذي أرسل الرسالة لا يتلقاها مرتين عبر التحديث المباشر
-                        // سيراها مرة واحدة عبر العرض المحلي (في sendBtn)
-                        if (msg.name !== nameInput) {
-                            displayMessage(msg);
-                            showNotification("رسالة جديدة من " + msg.name, msg.message);
-                            playNotificationSound();
-                        }
-                    }
-                )
-                .subscribe();
+                if (msg.name !== nameInput) {
+                    displayMessage(msg);
+                    showNotification("رسالة جديدة من " + msg.name, msg.message);
+                    playNotificationSound();
+                }
+                }
+            )
+            .subscribe();
 
             let mediaRecorder;
             let audioChunks = [];
             let currentUser = "";
 
             document.getElementById("recordBtn").addEventListener("click", async () => {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    const mimeType = MediaRecorder.isTypeSupported('audio/ogg') ? 'audio/ogg' : 'audio/webm';
-                    mediaRecorder = new MediaRecorder(stream, { mimeType });
-                    audioChunks = [];
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const mimeType = MediaRecorder.isTypeSupported('audio/ogg') ? 'audio/ogg' : 'audio/webm';
+                mediaRecorder = new MediaRecorder(stream, { mimeType });
+                audioChunks = [];
 
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
+                mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+                };
 
-                    mediaRecorder.start();
-                    console.log("🎙️ Recording started");
-                } catch (err) {
-                    alert("❌ Microphone access is required to record audio.");
-                }
+                mediaRecorder.start();
+                console.log("🎙️ Recording started");
+            } catch (err) {
+                alert("❌ Microphone access is required to record audio.");
+            }
             });
 
             document.getElementById("stopBtn").addEventListener("click", () => {
-                if (!mediaRecorder || mediaRecorder.state !== "recording") {
-                    alert("❌ You must start recording before stopping.");
-                    return;
+            if (!mediaRecorder || mediaRecorder.state !== "recording") {
+                alert("❌ You must start recording before stopping.");
+                return;
+            }
+
+            mediaRecorder.stop();
+            console.log("🛑 Recording stopped");
+
+            mediaRecorder.onstop = async () => {
+                const mimeType = mediaRecorder.mimeType;
+                const extension = mimeType.includes('ogg') ? 'ogg' : 'webm';
+                const audioBlob = new Blob(audioChunks, { type: mimeType });
+
+                if (audioBlob.size === 0) {
+                alert("❌ The audio file is empty and cannot be uploaded.");
+                return;
                 }
 
-                mediaRecorder.stop();
-                console.log("🛑 Recording stopped");
+                let fileName = `voice_${Date.now()}.${extension}`;
+                fileName = fileName.replace(/[^a-zA-Z0-9_\u0600-\u06FF.]/g, '_');
 
-                mediaRecorder.onstop = async () => {
-                    const mimeType = mediaRecorder.mimeType;
-                    const extension = mimeType.includes('ogg') ? 'ogg' : 'webm';
-                    const audioBlob = new Blob(audioChunks, { type: mimeType });
+                const { data: uploadData, error: uploadError } = await client.storage
+                .from('voice_notes')
+                .upload(fileName, audioBlob, {
+                    contentType: mimeType
+                });
 
-                    if (audioBlob.size === 0) {
-                        alert("❌ The audio file is empty and cannot be uploaded.");
-                        return;
+                if (uploadError || !uploadData) {
+                alert("❌ Upload failed. Please report this error: " + (uploadError?.message || "Unknown error"));
+                return;
+                }
+
+                const { data: publicData, error: publicUrlError } = client.storage
+                .from('voice_notes')
+                .getPublicUrl(fileName);
+
+                if (publicUrlError || !publicData?.publicUrl) {
+                alert("❌ Failed to get public URL. Please report this error.");
+                return;
+                }
+
+                const publicUrl = publicData.publicUrl;
+                const nameInput = document.getElementById("name").value.trim();
+                currentUser = nameInput || "Anonymous";
+
+                const { error: dbError } = await client
+                .from('voice_messages')
+                .insert([
+                    {
+                    name: currentUser,
+                    audio_url: publicUrl,
+                    timestamp: new Date().toISOString()
                     }
+                ]);
 
-                    let fileName = `voice_${Date.now()}.${extension}`;
-                    fileName = fileName.replace(/[^a-zA-Z0-9_\u0600-\u06FF.]/g, '_');
+                if (dbError) {
+                alert("❌ Failed to save message. Please report this error: " + dbError.message);
+                return;
+                }
 
-                    const { data: uploadData, error: uploadError } = await client.storage
-                        .from('voice_notes')
-                        .upload(fileName, audioBlob, {
-                            contentType: mimeType
-                        });
+                const chat = document.getElementById("chat");
+                const msgDiv = document.createElement("div");
+                msgDiv.className = "message you";
 
-                    if (uploadError || !uploadData) {
-                        alert("❌ Upload failed. Please report this error: " + (uploadError?.message || "Unknown error"));
-                        return;
-                    }
+                const nameDiv = document.createElement("div");
+                nameDiv.className = "name";
+                nameDiv.textContent = currentUser + " • " + new Date().toLocaleTimeString();
 
-                    const { data: publicData, error: publicUrlError } = client.storage
-                        .from('voice_notes')
-                        .getPublicUrl(fileName);
+                const audioPlayer = document.createElement("audio");
+                audioPlayer.controls = true;
+                audioPlayer.style.width = "100%";
 
-                    if (publicUrlError || !publicData?.publicUrl) {
-                        alert("❌ Failed to get public URL. Please report this error.");
-                        return;
-                    }
+                const source = document.createElement("source");
+                source.src = publicUrl;
+                source.type = mimeType;
 
-                    const publicUrl = publicData.publicUrl;
-                    const nameInput = document.getElementById("name").value.trim();
-                    currentUser = nameInput || "Anonymous";
+                audioPlayer.appendChild(source);
+                audioPlayer.innerHTML += "Your browser does not support audio playback.";
 
-                    const { error: dbError } = await client
-                        .from('voice_messages')
-                        .insert([
-                            {
-                                name: currentUser,
-                                audio_url: publicUrl,
-                                timestamp: new Date().toISOString()
-                            }
-                        ]);
-
-                    if (dbError) {
-                        alert("❌ Failed to save message. Please report this error: " + dbError.message);
-                        return;
-                    }
-
-                    const chat = document.getElementById("chat");
-                    const msgDiv = document.createElement("div");
-                    msgDiv.className = "message you";
-
-                    const nameDiv = document.createElement("div");
-                    nameDiv.className = "name";
-                    nameDiv.textContent = currentUser + " • " + new Date().toLocaleTimeString();
-
-                    const audioPlayer = document.createElement("audio");
-                    audioPlayer.controls = true;
-                    audioPlayer.style.width = "100%";
-
-                    const source = document.createElement("source");
-                    source.src = publicUrl;
-                    source.type = mimeType;
-
-                    audioPlayer.appendChild(source);
-                    audioPlayer.innerHTML += "Your browser does not support audio playback.";
-
-                    msgDiv.appendChild(nameDiv);
-                    msgDiv.appendChild(audioPlayer);
-                    chat.appendChild(msgDiv);
-                    chat.scrollTop = chat.scrollHeight;
-                };
+                msgDiv.appendChild(nameDiv);
+                msgDiv.appendChild(audioPlayer);
+                chat.appendChild(msgDiv);
+                chat.scrollTop = chat.scrollHeight;
+            };
             });
 
             document.getElementById("avatarBtn").addEventListener("click", () => {
-                document.getElementById("avatar").click();
+            document.getElementById("avatar").click();
             });
 
             document.getElementById("sendBtn").addEventListener("click", async () => {
-                const nameInput = document.getElementById("name").value.trim();
-                const messageInput = document.getElementById("messages").value.trim();
-                const avatarFile = document.getElementById("avatar").files[0];
+            const nameInput = document.getElementById("name").value.trim();
+            const messageInput = document.getElementById("messages").value.trim();
+            const avatarFile = document.getElementById("avatar").files[0];
 
-                if (!messageInput) {
-                    alert("❌ you must enter a message before sending.");
-                    return;
+            if (!messageInput) {
+                alert("❌ you must enter a message before sending.");
+                return;
+            }
+
+            const name = nameInput || "Anonymous";
+            const lowerMessage = messageInput.toLowerCase();
+            const containsBadWord = badWords.some(word => lowerMessage.includes(word));
+            const userViolations = violations[name] || { count: 0, bannedUntil: null };
+            const now = Date.now();
+
+            if (userViolations.bannedUntil && now < userViolations.bannedUntil) {
+                alert("❌ you are currently banned from sending messages. Please wait 5 minutes until the ban expires.");
+                return;
+            }
+
+            if (containsBadWord) {
+                userViolations.count += 1;
+                if (userViolations.count === 1) {
+                alert("⚠️ inappropriate language detected. This is your first warning.after 3 warnings, you will be banned for 5 minutes.");
+                } else if (userViolations.count >= 3) {
+                userViolations.bannedUntil = now + 5 * 60 * 1000;
+                displaySystemMessage(`🚫 ${name} has been banned for 5 minutes due to inappropriate language.`);
+                alert("🚫 you are banned from using massaging for 5 minutes because of using inappropriate words a lot");
+                }
+                violations[name] = userViolations;
+                localStorage.setItem("violations", JSON.stringify(violations));
+                return;
+            }
+
+            let avatarUrl = "";
+            if (avatarFile) {
+                const avatarFileName = `avatar_${Date.now()}_${avatarFile.name}`.replace(/[^a-zA-Z0-9_.]/g, '_');
+                const { data: uploadData, error: uploadError } = await client.storage
+                .from('avatars')
+                .upload(avatarFileName, avatarFile, {
+                    contentType: avatarFile.type
+                });
+                if (uploadError) {
+                alert("❌ error uploading avatar.report this error: " + uploadError.message);
+                return;
                 }
 
-                const name = nameInput || "Anonymous";
-                const lowerMessage = messageInput.toLowerCase();
-                const containsBadWord = badWords.some(word => lowerMessage.includes(word));
-                const userViolations = violations[name] || { count: 0, bannedUntil: null };
-                const now = Date.now();
+                const { data: publicData } = client.storage
+                .from('avatars')
+                .getPublicUrl(avatarFileName);
+                avatarUrl = publicData.publicUrl;
+            }
 
-                if (userViolations.bannedUntil && now < userViolations.bannedUntil) {
-                    alert("❌ you are currently banned from sending messages. Please wait 5 minutes until the ban expires.");
-                    return;
-                }
-
-                if (containsBadWord) {
-                    userViolations.count += 1;
-                    if (userViolations.count === 1) {
-                        alert("⚠️ inappropriate language detected. This is your first warning.after 3 warnings, you will be banned for 5 minutes.");
-                    } else if (userViolations.count >= 3) {
-                        userViolations.bannedUntil = now + 5 * 60 * 1000;
-                        alert("🚫 you are banned from using massaging for 5 minutes because of using inappropriate words a lot");
-                    }
-                    violations[name] = userViolations;
-                    localStorage.setItem("violations", JSON.stringify(violations));
-                    return;
-                }
-
-                let avatarUrl = "";
-                if (avatarFile) {
-                    const avatarFileName = `avatar_${Date.now()}_${avatarFile.name}`.replace(/[^a-zA-Z0-9_.]/g, '_');
-                    const { data: uploadData, error: uploadError } = await client.storage
-                        .from('avatars')
-                        .upload(avatarFileName, avatarFile, {
-                            contentType: avatarFile.type
-                        });
-                    if (uploadError) {
-                        alert("❌ error uploading avatar.report this error: " + uploadError.message);
-                        return;
-                    }
-
-                    const { data: publicData } = client.storage
-                        .from('avatars')
-                        .getPublicUrl(avatarFileName);
-                    avatarUrl = publicData.publicUrl;
-                }
-
-                // تسجيل الوقت قبل الإدراج
-                const timestamp = new Date().toISOString(); 
-                const { error: dbError } = await client
-                    .from('messages')
-                    .insert([
-                        {
-                            name: name,
-                            message: messageInput,
-                            avatar: avatarUrl,
-                            timestamp: timestamp 
-                        }
-                    ]);
-                
-                if (dbError) {
-                    alert("❌ Failed to send message: " + dbError.message);
-                    return;
-                }
-
-                // 🚀 التعديل الحاسم: عرض الرسالة على شاشة المُرسِل فورًا
-                // هذا يضمن رؤية الرسالة حتى لو تأخر التحديث المباشر قليلاً، ويتجاهل التحديث المباشر الرسالة لاحقاً (وهو السلوك الصحيح).
-                const sentMessageData = {
+            const timestamp = new Date().toISOString(); 
+            const { error: dbError } = await client
+                .from('messages')
+                .insert([
+                {
                     name: name,
                     message: messageInput,
                     avatar: avatarUrl,
-                    timestamp: timestamp
-                };
-                displayMessage(sentMessageData);
-                // ---------------------------------------------------
+                    timestamp: timestamp 
+                }
+                ]);
+            
+            if (dbError) {
+                alert("❌ Failed to send message: " + dbError.message);
+                return;
+            }
 
-                document.getElementById("messages").value = "";
-                document.getElementById("avatar").value = "";
+            const sentMessageData = {
+                name: name,
+                message: messageInput,
+                avatar: avatarUrl,
+                timestamp: timestamp
+            };
+            displayMessage(sentMessageData);
+
+            document.getElementById("messages").value = "";
+            document.getElementById("avatar").value = "";
 
             });
 
             const soundButton = document.getElementById('soundButton');
 
             client.channel('chat-events')
-                .on('broadcast', { event: 'ring-bell' }, (payload) => {
-                    bellSound.play().catch(e => console.error("Error playing bell sound:", e));
-                    console.log('🔔 Received bell ring from:', payload.name);
-                })
-                .subscribe();
+            .on('broadcast', { event: 'ring-bell' }, (payload) => {
+                bellSound.play().catch(e => console.error("Error playing bell sound:", e));
+                showNotification("🔔 Bell Ring", `${payload.payload.name} pressed the sound button`);
+                displaySystemMessage(`🔔 ${payload.payload.name} rang the bell`);
+                console.log('🔔 Received bell ring from:', payload.payload.name);
+            })
+            .subscribe();
 
             soundButton.addEventListener('click', async () => {
-                const name = document.getElementById("name").value.trim() || "Anonymous";
+            const name = document.getElementById("name").value.trim() || "Anonymous";
 
-                const { error } = await client.channel('chat-events').send({
-                    type: 'broadcast',
-                    event: 'ring-bell',
-                    payload: { name: name }
-                });
+            const { error } = await client.channel('chat-events').send({
+                type: 'broadcast',
+                event: 'ring-bell',
+                payload: { name: name }
+            });
 
-                if (error) {
-                    console.error('Error sending bell broadcast:', error);
-                }
+            if (error) {
+                console.error('Error sending bell broadcast:', error);
+            }
             });
         });
     </script>
