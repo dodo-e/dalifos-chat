@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <head>
-         <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Dalifos© Chat (Beta Release)</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -11,58 +11,51 @@
 </head>
 <body>
     <div class="navbar">
-        <img src="assets/logo.png" alt="Dalifos Logo" class="logo">
-        <h1>Dalifos© Chat Beta</h1>
+        <a href="index.html"><img src="assets/logo.png" alt="Dalifos Logo" class="logo"></a>
+        <h1>Dalifos© Chat Beta   </h1>
         <div class="dropdown">
-            <button class="dropbtn">chats</button>
+            <button class="dropbtn">...</button>
             <div class="dropdown-content">
-            <a href="#" title="private chat" style="cursor: not-allowed;"><img
+                       <p>options</p>
+                <a href="whats new in Dalifos chat.html" title="what's new in Dalifos chat"><img src="assets/logo.png">what's new</a>
+                <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"><img src="assets/error-svgrepo-com.svg">report errors</a>
+                <a href="channel.html" title="youtube channel"><img src="assets/YouTube-logo.png">youtube channel</a>
+                <a href="FAQ.html" title="frequently asked questions"><img src="assets/FAQ.png">FAQ</a>
+                       <p>chats</p>
+                            <a href="#" title="private chat" style="cursor: not-allowed;"><img
                 src="assets/private-message-svgrepo-com.svg"> &gt;private chat (Coming Soon)</a>
             <a href="#" title="private group (not created)" style="cursor: not-allowed;"><img
                 src="assets/group-chat-svgrepo-com.svg">private group chat (comming soon)</a>
             <a href="index.html" title="public chat"><img src="assets/public-opened-svgrepo-com.svg">public chat </a>
-            </div>
-        </div>
-        <div class="dropdown">
-            <button class="dropbtn">Dalifos© progects</button>
-            <div class="dropdown-content">
+                          <p>other progects</p>
                 <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo main.png">Dalifos©
                     web</a>
                 <a href="index.html" title="Dalifos© chat"><img src="assets/public-opened-svgrepo-com.svg">Dalifos© chat</a>
                 <a href="https://dodo-e.github.io/Dalifos-BD1/" title="Dalifos© BD1"><img src="assets/logo (2).png">Dalifos© BD1</a>
-            </div>
+    </div>
         </div>
-        <div class="dropdown">
-            <button class="dropbtn">options</button>
-            <div class="dropdown-content">
-                <a href="whats new in Dalifos chat.html" title="what's new in Dalifos chat"><img src="assets/logo.png">what's
-                    new</a>
-                <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"><img
-                        src="assets/error-svgrepo-com.svg">report errors</a>
-                <a href="channel.html" title="youtube channel"><img src="assets/YouTube-logo.png">youtube channel</a>
 
             </div>
         </div>
     </div>
-    <h2>💬 Dalifos Chat Beta 4 💬</h2>
+        </div></div></div>
+    <h2>💬 Dalifos Chat Beta 4.2 💬</h2>
     <div id="chat">
         </div>
     <br>
-    <br>
     <input type="file" id="avatar" accept="image/*" style="display: none;">
     <button type="button" id="avatarBtn" title="Choose an avatar (optional)">
-        <img src="assets/avatar-svgrepo-com.svg" alt="choose avatar" class="avatar-icon">
+        <img src="assets/avatar-default-svgrepo-com.svg" alt="choose avatar" class="avatar-icon">
     </button>
-    <input type="text" id="name" placeholder="Your name" title="Enter your name">
-    <input type="text" id="messages" placeholder="Type a message" title="Type your message here">
-    <button id="sendBtn"><img src="assets/send-svgrepo-com.svg" title="Send"></button>
-    <br><br>
-    <button id="recordBtn"><img src="assets/play-svgrepo-com.svg"></button>
-    <button id="stopBtn"><img src="assets/stop-circle-svgrepo-com.svg"></button>
-    <button id="soundButton"><img src="assets/notification-bell-svgrepo-com.svg"></button>
-    <h3>note:this website is beta, so if you see an error,please report it<br>do not share any personal data because some
-        data may be seen by company</h3>
-    <h3>by devoloper: Dalifos</h3>
+    <input type="text" id="name" placeholder="name" title="Enter your name">
+    <input type="text" id="messages" placeholder="Type here" title="Type your message here">
+    <button id="sendBtn"><img src="assets/paper-plane-tilt-fill-svgrepo-com.svg" title="Send"></button>
+    <br>
+    <button id="recordBtn"><img src="assets/microphone-sensitivity-high-svgrepo-com.svg" title="start voice note" ></button>
+    <button id="stopBtn"><img src="assets/microphone-disabled-svgrepo-com.svg" title="stop voice note"></button>
+    <button id="soundButton"><img src="assets/emoji-flags-svgrepo-com.svg" title="make like a wake for chat"></button>
+    <h3><b>do not share any personal data because some data may be seen by company</b></h3>
+    <h3>note: this website is beta, so if you see an error, please report it </h3>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
             const navbar = document.querySelector(".navbar");
@@ -101,9 +94,9 @@
             if ('Notification' in window) {
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
-                console.log("تم منح الإذن للإشعارات.");
+                console.log("notefacation permission granted.");
                 } else if (permission === 'denied') {
-                console.log("تم رفض إذن الإشعارات.");
+                console.log("notefacation permission denied.");
                 }
             });
             }
@@ -462,8 +455,77 @@
             if (error) {
                 console.error('Error sending bell broadcast:', error);
             }
+
+            // Monitor Supabase real-time connection status
+            const connectionStatus = document.createElement("div");
+            connectionStatus.id = "connection-status";
+            connectionStatus.style.display = "none";
+            connectionStatus.style.backgroundColor = "#ff6b6b";
+            connectionStatus.style.color = "white";
+            connectionStatus.style.padding = "12px";
+            connectionStatus.style.borderRadius = "5px";
+            connectionStatus.style.marginBottom = "10px";
+            connectionStatus.style.textAlign = "center";
+            connectionStatus.style.fontWeight = "bold";
+            document.body.insertBefore(connectionStatus, document.getElementById("chat"));
+
+            client.channel('messages-realtime').on('system', { event: '*' }, (payload) => {
+                if (payload.type === 'SYSTEM' && (payload.message?.type === 'CHANNEL_ERROR' || payload.message?.type === 'SOCKET_ERROR')) {
+                    connectionStatus.textContent = "⚠️ Connection lost. Attempting to reconnect...";
+                    connectionStatus.style.display = "block";
+                    displaySystemMessage("⚠️ Connection issues detected. Some messages may not be received. please check your internet connection or contact us on report errors fastly.");
+                }
+            }).subscribe();
+
+            // Check connection status periodically
+            setInterval(() => {
+                const state = client.getChannels()[0]?.state;
+                if (state === 'joined') {
+                    connectionStatus.style.display = "none";
+                } else if (state === 'errored' || state === 'left') {
+                    connectionStatus.textContent = "⚠️ Connection lost. Attempting to reconnect...";
+                    connectionStatus.style.display = "block";
+                }
+            }, 3000);
             });
         });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+        <script>
+            // Update displayMessage function to sanitize content
+            const originalDisplayMessage = displayMessage;
+            displayMessage = function(msg) {
+            const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+            const isMyMessage = msg.name === nameInput;
+
+            const chat = document.getElementById("chat");
+            const msgDiv = document.createElement("div");
+            msgDiv.className = isMyMessage ? "message you" : "message other";
+
+            const nameDiv = document.createElement("div");
+            nameDiv.className = "name";
+            nameDiv.innerHTML = DOMPurify.sanitize(msg.name) + " • " + new Date(msg.timestamp).toLocaleTimeString();
+
+            if (msg.avatar) {
+                const avatarImg = document.createElement("img");
+                avatarImg.src = msg.avatar;
+                avatarImg.style.width = "40px";
+                avatarImg.style.height = "40px";
+                avatarImg.style.borderRadius = "50%";
+                avatarImg.style.marginRight = "10px";
+                nameDiv.prepend(avatarImg);
+            }
+
+            const messageDiv = document.createElement("div");
+            messageDiv.innerHTML = DOMPurify.sanitize(msg.message);
+
+            msgDiv.appendChild(nameDiv);
+            msgDiv.appendChild(messageDiv);
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
+            };
+        </script>
+
     </script>
 
 </body>
