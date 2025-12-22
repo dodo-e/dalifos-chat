@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<head>
+<head>    
     <meta name="google-site-verification" content="q_vJ_negIqtaZpzVtg0aMM9CNBFzAuNxlm2kTpHXAtA" />
+    <meta name="keywords" content="chatting online, online chat, Dalifos, Ai chat, public chat, voice notes, free chat, dalifos chat, dalifos online chat, dalifos ai chat, dalifos public chat, dalifos voice notes, cha t">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000" rel="stylesheet">
@@ -9,26 +10,63 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+    <svg style="display: none;">
+  <filter id="liquid-refraction">
+    <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" result="noise" />
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+<style>
+    .typing-indicator {
+        color: #999;
+        font-style: italic;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    
+    .mention {
+        color: #0159aa;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .mention:hover {
+        text-decoration: underline;
+    }
+    
+    .edited-label {
+        font-size: 10px;
+        color: #999;
+        font-style: italic;
+        margin-left: 5px;
+    }
+</style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="index.html"><img src="assets/logo.png" alt="Dalifos Logo" class="logo"></a>
-        <h1>Dalifos© Chat Beta   </h1>
+    
         <div class="dropdown">
+            <div class="dropbtn-container">
             <button class="dropbtn">...</button>
+            </div>
             <div class="dropdown-content">
-                       <p>options</p>
+                       <p>pages</p>
                 <a href="whats new in Dalifos chat.html" title="what's new in Dalifos chat"><img src="assets/logo.png">what's new</a>
                 <a href="https://forms.gle/HfwsYZVLD84mia2b8" title="report errors"><img src="assets/error-svgrepo-com.svg">report errors</a>
                 <a href="channel.html" title="youtube channel"><img src="assets/YouTube-logo.png">youtube channel</a>
                 <a href="FAQ.html" title="frequently asked questions"><img src="assets/FAQ.png">FAQ</a>
+                
+                <p>settings</p>
+                <button id="themeToggle" style="width: 100%; text-align: left; background: none; padding: 12px 16px; margin: 0;">🌙 Dark Mode</button>
+                <button id="notificationToggle" style="width: 100%; text-align: left; background: none; padding: 12px 16px; margin: 0;">🔔 Notifications On</button>
+                <button id="emojiPickerBtn" style="width: 100%; text-align: left; background: none; padding: 12px 16px; margin: 0;">😊 Emoji Picker</button>
+                
                        <p>chats</p>
                             <a href="#" title="private chat" style="cursor: not-allowed;"><img
                 src="assets/private-message-svgrepo-com.svg"> &gt;private chat (Coming Soon)</a>
             <a href="#" title="private group (not created)" style="cursor: not-allowed;"><img
                 src="assets/group-chat-svgrepo-com.svg">private group chat (comming soon)</a>
             <a href="index.html" title="public chat"><img src="assets/public-opened-svgrepo-com.svg">public chat </a>
-            <a href="chat_AI" title="AI chat"><img src="assets/Ai.png">AI chat</a>
+            <a href="chat_AI.html" title="AI chat"><img src="assets/AI.png">AI chat (comming soon)</a>
                           <p>other progects</p>
                 <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo main.png">Dalifos©
                     web</a>
@@ -40,11 +78,22 @@
             </div>
         </div>
     </div>
-        </div></div></div>
-    <h2>💬 Dalifos Chat Beta 4.2 💬</h2>
+        </div></div>
+    <h2>💬 Dalifos Chat v. 1.0 💬</h2>
+    
+    <!-- Online Users Section -->
+    <div id="onlineUsersContainer" style="display: none;">
+        <p style="color: #0159aa; margin: 5px 0; font-size: 14px;">👥 Active Users: <span id="onlineCount">0</span></p>
+        <div id="usersList" style="background: #f0f0f0; border-radius: 10px; padding: 10px; margin-bottom: 10px; max-height: 100px; overflow-y: auto; color: #333; font-size: 12px;"></div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
+
     <div id="chat">
         </div>
     <br>
+    <div class="chatting">
     <input type="file" id="avatar" accept="image/*" style="display: none;">
     <button type="button" id="avatarBtn" title="Choose an avatar (optional)">
         <img src="assets/avatar-default-svgrepo-com.svg" alt="choose avatar" class="avatar-icon">
@@ -56,34 +105,32 @@
     <button id="recordBtn"><img src="assets/microphone-sensitivity-high-svgrepo-com.svg" title="start voice note" ></button>
     <button id="stopBtn"><img src="assets/microphone-disabled-svgrepo-com.svg" title="stop voice note"></button>
     <button id="soundButton"><img src="assets/emoji-flags-svgrepo-com.svg" title="make like a wake for chat"></button>
-    <h3><b>do not share any personal data because some data may be seen by company</b></h3>
-    <h3>note: this website is beta, so if you see an error, please report it </h3>
+    </div>
+
+    <!-- Emoji Picker Modal -->
+    <div id="emojiModal" style="display: none; position: fixed; bottom: 250px; right: 20px; background: white; border: 2px solid #0159aa; border-radius: 10px; padding: 10px; z-index: 1000; max-width: 300px; max-height: 300px; overflow-y: auto;">
+        <div id="emojiGrid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;"></div>
+    </div>
+
+    <!-- Edit Message Modal -->
+    <div id="editModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 2px solid #0159aa; border-radius: 10px; padding: 20px; z-index: 2000; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="margin: 0 0 15px 0; color: #333;">Edit Message</h3>
+        <input type="text" id="editMessageInput" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; box-sizing: border-box;">
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button id="editSaveBtn" style="padding: 8px 16px; background: #0159aa; color: white; border: none; border-radius: 5px; cursor: pointer;">Save</button>
+            <button id="editCancelBtn" style="padding: 8px 16px; background: #ccc; color: black; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Edit Modal Overlay -->
+    <div id="editOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999;"></div>
+
     <script>
-        window.addEventListener("DOMContentLoaded", () => {
-            const navbar = document.querySelector(".navbar");
-            const hideBtn = document.createElement("button");
-            hideBtn.id = "hideNavbarBtn";
-            hideBtn.textContent = "☰";
-            hideBtn.style.position = "fixed";
-            hideBtn.style.top = "10px";
-            hideBtn.style.right = "10px";
-            hideBtn.style.zIndex = "1001";
-            hideBtn.style.padding = "8px 12px";
-            hideBtn.style.backgroundColor = "#333";
-            hideBtn.style.color = "#fff";
-            hideBtn.style.border = "none";
-            hideBtn.style.borderRadius = "5px";
-            hideBtn.style.cursor = "pointer";
-            document.body.appendChild(hideBtn);
-
-            hideBtn.addEventListener("click", () => {
-            navbar.style.display = navbar.style.display === "none" ? "block" : "none";
-            });
-
+        
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             if (isSafari) {
             const warning = document.createElement("div");
-            warning.textContent = "⚠️ Iphone is beta. Please use android for the best experience.";
+            warning.textContent = "⚠️ Iphone is not recomended. Please use android for the best experience.";
             warning.style.backgroundColor = "#ffcc00";
             warning.style.color = "black";
             warning.style.padding = "10px";
@@ -104,7 +151,7 @@
             }
 
             function showNotification(title, body) {
-            if (Notification.permission === 'granted') {
+            if (Notification.permission === 'granted' && notificationsEnabled) {
                 const notification = new Notification(title, {
                 body: body,
                 icon: 'https://dodo-e.github.io/dalifos-website/logo.png',
@@ -120,8 +167,10 @@
             const audio = new Audio('assets/notifacation.mp3');
 
             function playNotificationSound() {
-            audio.currentTime = 0;
-            audio.play().catch(e => console.error("Error playing sound:", e));
+            if (notificationsEnabled) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.error("Error playing sound:", e));
+            }
             }
 
             const bellSound = new Audio('assets/bell.mp3');
@@ -132,22 +181,339 @@
 
             const savedName = localStorage.getItem("chat_name");
             const savedAvatar = localStorage.getItem("chat_avatar");
+            let notificationsEnabled = localStorage.getItem("notifications_enabled") !== "false";
+            let darkMode = localStorage.getItem("dark_mode") === "true";
+            let allMessages = [];
+            let userProfiles = {};
+            let typingTimeout;
+            let currentEditingMsgId = null;
 
             if (savedName) {
             document.getElementById("name").value = savedName;
             }
 
-            function displayMessage(msg) {
+            // Utility: Format relative time
+            function formatRelativeTime(timestamp) {
+                const now = new Date();
+                const msgTime = new Date(timestamp);
+                const diffMs = now - msgTime;
+                const diffSecs = Math.floor(diffMs / 1000);
+                const diffMins = Math.floor(diffSecs / 60);
+                const diffHours = Math.floor(diffMins / 60);
+                const diffDays = Math.floor(diffHours / 24);
+
+                if (diffSecs < 60) return "just now";
+                if (diffMins < 60) return `${diffMins}m ago`;
+                if (diffHours < 24) return `${diffHours}h ago`;
+                if (diffDays < 7) return `${diffDays}d ago`;
+                return msgTime.toLocaleDateString();
+            }
+
+            // Utility: Highlight mentions in text
+            function highlightMentions(text) {
+                return text.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
+            }
+
+            // Typing indicator
+            const messagesInput = document.getElementById("messages");
+            const typingIndicator = document.getElementById("typingIndicator");
+
+            messagesInput.addEventListener("input", () => {
+                const name = document.getElementById("name").value.trim() || "Anonymous";
+                
+                // Show typing indicator locally
+                clearTimeout(typingTimeout);
+                
+                client.channel('typing-indicator').send({
+                    type: 'broadcast',
+                    event: 'user-typing',
+                    payload: { name: name }
+                }).catch(() => {});
+                
+                typingTimeout = setTimeout(() => {
+                    client.channel('typing-indicator').send({
+                        type: 'broadcast',
+                        event: 'user-stopped-typing',
+                        payload: { name: name }
+                    }).catch(() => {});
+                }, 1000);
+            });
+
+            client.channel('typing-indicator')
+            .on('broadcast', { event: 'user-typing' }, (payload) => {
+                const name = document.getElementById("name").value.trim() || "Anonymous";
+                if (payload.payload.name !== name) {
+                    typingIndicator.textContent = `✏️ ${payload.payload.name} is typing...`;
+                    typingIndicator.style.display = "block";
+                }
+            })
+            .on('broadcast', { event: 'user-stopped-typing' }, (payload) => {
+                typingIndicator.style.display = "none";
+            })
+            .subscribe();
+
+            // Theme Toggle - Enhanced Dark Mode
+            const themeToggle = document.getElementById("themeToggle");
+            themeToggle.addEventListener("click", () => {
+                darkMode = !darkMode;
+                localStorage.setItem("dark_mode", darkMode);
+                applyTheme();
+            });
+
+            function applyTheme() {
+                if (darkMode) {
+                    // Dark mode - apply to entire page
+                    document.documentElement.style.backgroundColor = "#1a1a1a";
+                    document.body.style.backgroundColor = "#1a1a1a";
+                    document.body.style.color = "#e0e0e0";
+                    
+                    // Update all text colors
+                    const allText = document.querySelectorAll("p, h1, h2, h3, h4, span");
+                    allText.forEach(el => {
+                        if (!el.style.color || el.style.color === "black") {
+                            el.style.color = "#e0e0e0";
+                        }
+                    });
+                    
+                    // Update chat area
+                    document.getElementById("chat").style.backgroundColor = "#2a2a2a";
+                    document.getElementById("chat").style.color = "#e0e0e0";
+                    
+                    // Update input fields
+                    const inputs = document.querySelectorAll("input[type='text']");
+                    inputs.forEach(input => {
+                        input.style.backgroundColor = "#333";
+                        input.style.color = "#e0e0e0";
+                        input.style.borderColor = "#555";
+                    });
+                    
+                    // Update buttons
+                    const buttons = document.querySelectorAll("button");
+                    buttons.forEach(btn => {
+                        if (btn.style.background === "" || btn.style.backgroundColor === "white" || btn.style.backgroundColor === "rgb(255, 255, 255)") {
+                            btn.style.backgroundColor = "#333";
+                            btn.style.color = "#e0e0e0";
+                        }
+                    });
+                    
+                    // Update dropdown
+                    const dropdownContent = document.querySelector(".dropdown-content");
+                    if (dropdownContent) {
+                        dropdownContent.style.background = "rgba(50, 50, 50, 0.95)";
+                    }
+                    
+                    const dropdownLinks = document.querySelectorAll(".dropdown-content a");
+                    dropdownLinks.forEach(link => {
+                        link.style.color = "#e0e0e0";
+                        link.style.backgroundColor = "transparent";
+                    });
+
+                    const dropdownButtons = document.querySelectorAll(".dropdown-content button");
+                    dropdownButtons.forEach(btn => {
+                        btn.style.color = "#e0e0e0";
+                        btn.style.backgroundColor = "transparent";
+                    });
+                    
+                    // Update users list
+                    const usersList = document.getElementById("usersList");
+                    usersList.style.backgroundColor = "#333";
+                    usersList.style.color = "#e0e0e0";
+                    
+                    // Update emoji modal
+                    const emojiModal = document.getElementById("emojiModal");
+                    emojiModal.style.backgroundColor = "#2a2a2a";
+                    emojiModal.style.borderColor = "#555";
+
+                    // Update edit modal
+                    const editModal = document.getElementById("editModal");
+                    editModal.style.backgroundColor = "#2a2a2a";
+                    editModal.style.color = "#e0e0e0";
+                    
+                    // Update online users container
+                    const onlineUsersContainer = document.getElementById("onlineUsersContainer");
+                    onlineUsersContainer.style.backgroundColor = "transparent";
+                    
+                    themeToggle.textContent = "☀️ Light Mode";
+                    themeToggle.style.backgroundColor = "transparent";
+                } else {
+                    // Light mode
+                    document.documentElement.style.backgroundColor = "";
+                    document.body.style.backgroundColor = "";
+                    document.body.style.color = "";
+                    
+                    const allText = document.querySelectorAll("p, h1, h2, h3, h4, span");
+                    allText.forEach(el => {
+                        el.style.color = "";
+                    });
+                    
+                    document.getElementById("chat").style.backgroundColor = "";
+                    document.getElementById("chat").style.color = "";
+                    
+                    const inputs = document.querySelectorAll("input[type='text']");
+                    inputs.forEach(input => {
+                        input.style.backgroundColor = "white";
+                        input.style.color = "black";
+                        input.style.borderColor = "";
+                    });
+                    
+                    const buttons = document.querySelectorAll("button");
+                    buttons.forEach(btn => {
+                        btn.style.backgroundColor = "";
+                        btn.style.color = "";
+                    });
+                    
+                    const dropdownContent = document.querySelector(".dropdown-content");
+                    if (dropdownContent) {
+                        dropdownContent.style.background = "rgba(255, 255, 255, 0.74)";
+                    }
+                    
+                    const dropdownLinks = document.querySelectorAll(".dropdown-content a");
+                    dropdownLinks.forEach(link => {
+                        link.style.color = "black";
+                        link.style.backgroundColor = "transparent";
+                    });
+
+                    const dropdownButtons = document.querySelectorAll(".dropdown-content button");
+                    dropdownButtons.forEach(btn => {
+                        btn.style.color = "black";
+                        btn.style.backgroundColor = "transparent";
+                    });
+                    
+                    const usersList = document.getElementById("usersList");
+                    usersList.style.backgroundColor = "#f0f0f0";
+                    usersList.style.color = "#333";
+                    
+                    const emojiModal = document.getElementById("emojiModal");
+                    emojiModal.style.backgroundColor = "white";
+                    emojiModal.style.borderColor = "#0159aa";
+
+                    const editModal = document.getElementById("editModal");
+                    editModal.style.backgroundColor = "white";
+                    editModal.style.color = "black";
+                    
+                    themeToggle.textContent = "🌙 Dark Mode";
+                    themeToggle.style.backgroundColor = "transparent";
+                }
+            }
+
+            // Notification Toggle
+            const notificationToggle = document.getElementById("notificationToggle");
+            notificationToggle.addEventListener("click", () => {
+                notificationsEnabled = !notificationsEnabled;
+                localStorage.setItem("notifications_enabled", notificationsEnabled);
+                notificationToggle.textContent = notificationsEnabled ? "🔔 Notifications On" : "🔕 Notifications Off";
+            });
+
+            // Update notification toggle display on load
+            notificationToggle.textContent = notificationsEnabled ? "🔔 Notifications On" : "🔕 Notifications Off";
+            applyTheme();
+
+            // Emoji Picker
+            const commonEmojis = ['😀', '😂', '😍', '🥰', '😘', '🤔', '😎', '🔥', '👍', '👌', '❤️', '😢', '😡', '🎉', '🎊', '🎈', '⭐', '✨', '🌟', '💯', '🚀', '💪', '😭', '🤣'];
+            const emojiPickerBtn = document.getElementById("emojiPickerBtn");
+            const emojiModal = document.getElementById("emojiModal");
+            const emojiGrid = document.getElementById("emojiGrid");
+
+            commonEmojis.forEach(emoji => {
+                const emojiBtn = document.createElement("button");
+                emojiBtn.textContent = emoji;
+                emojiBtn.style.fontSize = "24px";
+                emojiBtn.style.border = "none";
+                emojiBtn.style.cursor = "pointer";
+                emojiBtn.style.padding = "5px";
+                emojiBtn.style.backgroundColor = darkMode ? "#333" : "white";
+                emojiBtn.addEventListener("click", () => {
+                    document.getElementById("messages").value += emoji;
+                    emojiModal.style.display = "none";
+                });
+                emojiGrid.appendChild(emojiBtn);
+            });
+
+            emojiPickerBtn.addEventListener("click", () => {
+                emojiModal.style.display = emojiModal.style.display === "none" ? "block" : "none";
+            });
+
+            document.addEventListener("click", (e) => {
+                if (e.target !== emojiPickerBtn && e.target !== emojiModal && !emojiModal.contains(e.target)) {
+                    emojiModal.style.display = "none";
+                }
+            });
+
+            // Edit Message Functions
+            const editModal = document.getElementById("editModal");
+            const editOverlay = document.getElementById("editOverlay");
+            const editMessageInput = document.getElementById("editMessageInput");
+            const editSaveBtn = document.getElementById("editSaveBtn");
+            const editCancelBtn = document.getElementById("editCancelBtn");
+
+            function openEditModal(msgId, currentText) {
+                currentEditingMsgId = msgId;
+                editMessageInput.value = currentText;
+                editModal.style.display = "block";
+                editOverlay.style.display = "block";
+                editMessageInput.focus();
+                editMessageInput.select();
+            }
+
+            function closeEditModal() {
+                editModal.style.display = "none";
+                editOverlay.style.display = "none";
+                currentEditingMsgId = null;
+                editMessageInput.value = "";
+            }
+
+            editSaveBtn.addEventListener("click", async () => {
+                const newText = editMessageInput.value.trim();
+                if (!newText) {
+                    alert("Message cannot be empty");
+                    return;
+                }
+
+                const msgDiv = document.getElementById(`msg-${currentEditingMsgId}`);
+                const contentDiv = msgDiv.querySelector(".message-content");
+                contentDiv.innerHTML = highlightMentions(DOMPurify.sanitize(newText));
+                
+                // Add edited label
+                let editedLabel = msgDiv.querySelector(".edited-label");
+                if (!editedLabel) {
+                    editedLabel = document.createElement("span");
+                    editedLabel.className = "edited-label";
+                    msgDiv.querySelector(".name").appendChild(editedLabel);
+                }
+                editedLabel.textContent = "(edited)";
+
+                closeEditModal();
+                displaySystemMessage(`${document.getElementById("name").value.trim() || "Anonymous"} edited a message`);
+            });
+
+            editCancelBtn.addEventListener("click", closeEditModal);
+
+            editOverlay.addEventListener("click", closeEditModal);
+
+            editMessageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    editSaveBtn.click();
+                }
+            });
+
+            function displayMessage(msg, includeReactions = true) {
             const nameInput = document.getElementById("name").value.trim() || "Anonymous";
             const isMyMessage = msg.name === nameInput;
 
             const chat = document.getElementById("chat");
             const msgDiv = document.createElement("div");
             msgDiv.className = isMyMessage ? "message you" : "message other";
+            msgDiv.id = `msg-${msg.id || Date.now()}`;
+            msgDiv.dataset.messageId = msg.id;
 
             const nameDiv = document.createElement("div");
             nameDiv.className = "name";
-            nameDiv.textContent = msg.name + " • " + new Date(msg.timestamp).toLocaleTimeString();
+            nameDiv.style.cursor = "pointer";
+            nameDiv.title = "Click to view profile";
+            
+            const timeString = formatRelativeTime(msg.timestamp);
+            nameDiv.innerHTML = DOMPurify.sanitize(msg.name) + " • " + timeString;
 
             if (msg.avatar) {
                 const avatarImg = document.createElement("img");
@@ -159,27 +525,99 @@
                 nameDiv.prepend(avatarImg);
             }
 
+            // Click to view profile
+            nameDiv.addEventListener("click", () => {
+                showUserProfile(msg.name);
+            });
+
             const messageDiv = document.createElement("div");
-            messageDiv.textContent = msg.message;
+            messageDiv.innerHTML = highlightMentions(DOMPurify.sanitize(msg.message));
+            messageDiv.className = "message-content";
+
+            // Reactions container
+            const reactionsDiv = document.createElement("div");
+            reactionsDiv.className = "reactions-container";
+            reactionsDiv.style.marginTop = "5px";
+            reactionsDiv.style.display = "flex";
+            reactionsDiv.style.gap = "5px";
+            reactionsDiv.style.flexWrap = "wrap";
+
+            const reactionEmojis = ['👍', '❤️', '😂', '🔥', '😢'];
+            reactionEmojis.forEach(emoji => {
+                const reactionBtn = document.createElement("button");
+                reactionBtn.textContent = emoji;
+                reactionBtn.style.background = "rgba(255,255,255,0.2)";
+                reactionBtn.style.border = "none";
+                reactionBtn.style.cursor = "pointer";
+                reactionBtn.style.padding = "2px 8px";
+                reactionBtn.style.borderRadius = "10px";
+                reactionBtn.style.fontSize = "14px";
+                reactionBtn.addEventListener("click", () => {
+                    addReaction(msgDiv, emoji);
+                });
+                reactionsDiv.appendChild(reactionBtn);
+            });
 
             msgDiv.appendChild(nameDiv);
             msgDiv.appendChild(messageDiv);
+            msgDiv.appendChild(reactionsDiv);
+
+            // Delete and Edit buttons for own messages
+            if (isMyMessage) {
+                const buttonsContainer = document.createElement("div");
+                buttonsContainer.style.marginTop = "5px";
+                buttonsContainer.style.display = "flex";
+                buttonsContainer.style.gap = "5px";
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "✏️ Edit";
+                editBtn.style.background = "rgba(0,150,255,0.3)";
+                editBtn.style.border = "none";
+                editBtn.style.cursor = "pointer";
+                editBtn.style.padding = "3px 8px";
+                editBtn.style.borderRadius = "5px";
+                editBtn.style.fontSize = "12px";
+                editBtn.addEventListener("click", () => {
+                    const currentText = messageDiv.textContent;
+                    openEditModal(msg.id || msgDiv.id.replace('msg-', ''), currentText);
+                });
+                buttonsContainer.appendChild(editBtn);
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "🗑️ Delete";
+                deleteBtn.style.background = "rgba(255,0,0,0.3)";
+                deleteBtn.style.border = "none";
+                deleteBtn.style.cursor = "pointer";
+                deleteBtn.style.padding = "3px 8px";
+                deleteBtn.style.borderRadius = "5px";
+                deleteBtn.style.fontSize = "12px";
+                deleteBtn.addEventListener("click", async () => {
+                    msgDiv.style.display = "none";
+                    displaySystemMessage(`${nameInput} deleted a message`);
+                });
+                buttonsContainer.appendChild(deleteBtn);
+
+                msgDiv.appendChild(buttonsContainer);
+            }
+
             chat.appendChild(msgDiv);
             chat.scrollTop = chat.scrollHeight;
+
+            allMessages.push(msg);
             }
 
             function displaySystemMessage(message) {
             const chat = document.getElementById("chat");
             const msgDiv = document.createElement("div");
             msgDiv.className = "message system";
-            msgDiv.style.backgroundColor = "#f0f0f0";
+            msgDiv.style.backgroundColor = darkMode ? "#3a3a3a" : "#f0f0f0";
             msgDiv.style.textAlign = "center";
             msgDiv.style.fontStyle = "italic";
-            msgDiv.style.color = "#666";
+            msgDiv.style.color = darkMode ? "#999" : "#666";
 
             const nameDiv = document.createElement("div");
             nameDiv.className = "name";
-            nameDiv.textContent = "System • " + new Date().toLocaleTimeString();
+            nameDiv.textContent = "System • " + formatRelativeTime(new Date().toISOString());
 
             const messageDiv = document.createElement("div");
             messageDiv.textContent = message;
@@ -188,6 +626,44 @@
             msgDiv.appendChild(messageDiv);
             chat.appendChild(msgDiv);
             chat.scrollTop = chat.scrollHeight;
+            }
+
+            function addReaction(msgDiv, emoji) {
+                const existingReaction = msgDiv.querySelector(`.reaction[data-emoji="${emoji}"]`);
+                if (existingReaction) {
+                    existingReaction.textContent = emoji + " " + (parseInt(existingReaction.textContent.split(" ")[1]) + 1);
+                } else {
+                    const reactionTag = document.createElement("span");
+                    reactionTag.className = "reaction";
+                    reactionTag.dataset.emoji = emoji;
+                    reactionTag.textContent = emoji + " 1";
+                    reactionTag.style.background = "rgba(255,255,255,0.3)";
+                    reactionTag.style.padding = "2px 6px";
+                    reactionTag.style.borderRadius = "10px";
+                    reactionTag.style.fontSize = "12px";
+                    reactionTag.style.marginRight = "5px";
+                    const reactionsContainer = msgDiv.querySelector(".reactions-container");
+                    if (reactionsContainer.lastChild) {
+                        reactionsContainer.parentNode.insertBefore(reactionTag, reactionsContainer.nextSibling);
+                    }
+                }
+            }
+
+            function showUserProfile(userName) {
+                const profile = userProfiles[userName] || {};
+                const messageCount = allMessages.filter(m => m.name === userName).length;
+                const firstMessage = allMessages.find(m => m.name === userName);
+                const joinTime = firstMessage ? new Date(firstMessage.timestamp).toLocaleDateString() : "Unknown";
+
+                alert(`👤 ${userName}\n📊 Messages: ${messageCount}\n📅 Joined: ${joinTime}`);
+            }
+
+            function updateUsersList() {
+                const uniqueUsers = [...new Set(allMessages.map(m => m.name))];
+                document.getElementById("onlineCount").textContent = uniqueUsers.length;
+                const usersList = document.getElementById("usersList");
+                usersList.innerHTML = uniqueUsers.map(user => `<div style="padding: 3px; border-bottom: 1px solid ${darkMode ? '#555' : '#ddd'};">✓ ${user}</div>`).join("");
+                document.getElementById("onlineUsersContainer").style.display = uniqueUsers.length > 0 ? "block" : "none";
             }
 
             async function fetchOldMessages() {
@@ -203,7 +679,13 @@
                 }
 
                 if (data) {
-                data.forEach(msg => displayMessage(msg));
+                data.forEach(msg => {
+                    displayMessage(msg);
+                    if (!userProfiles[msg.name]) {
+                        userProfiles[msg.name] = { avatar: msg.avatar };
+                    }
+                });
+                updateUsersList();
                 }
             } catch (err) {
                 console.error("An unexpected error occurred while fetching messages:", err);
@@ -230,6 +712,7 @@
 
                 if (msg.name !== nameInput) {
                     displayMessage(msg);
+                    updateUsersList();
                     showNotification("رسالة جديدة من " + msg.name, msg.message);
                     playNotificationSound();
                 }
@@ -326,7 +809,7 @@
 
                 const nameDiv = document.createElement("div");
                 nameDiv.className = "name";
-                nameDiv.textContent = currentUser + " • " + new Date().toLocaleTimeString();
+                nameDiv.textContent = currentUser + " • " + formatRelativeTime(new Date().toISOString());
 
                 const audioPlayer = document.createElement("audio");
                 audioPlayer.controls = true;
@@ -428,6 +911,7 @@
                 timestamp: timestamp
             };
             displayMessage(sentMessageData);
+            updateUsersList();
 
             document.getElementById("messages").value = "";
             document.getElementById("avatar").value = "";
@@ -438,7 +922,9 @@
 
             client.channel('chat-events')
             .on('broadcast', { event: 'ring-bell' }, (payload) => {
-                bellSound.play().catch(e => console.error("Error playing bell sound:", e));
+                if (notificationsEnabled) {
+                    bellSound.play().catch(e => console.error("Error playing bell sound:", e));
+                }
                 showNotification("🔔 Bell Ring", `${payload.payload.name} pressed the sound button`);
                 displaySystemMessage(`🔔 ${payload.payload.name} rang the bell`);
                 console.log('🔔 Received bell ring from:', payload.payload.name);
@@ -490,7 +976,6 @@
                 }
             }, 3000);
             });
-        });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
         <script>
@@ -506,7 +991,7 @@
 
             const nameDiv = document.createElement("div");
             nameDiv.className = "name";
-            nameDiv.innerHTML = DOMPurify.sanitize(msg.name) + " • " + new Date(msg.timestamp).toLocaleTimeString();
+            nameDiv.innerHTML = DOMPurify.sanitize(msg.name) + " • " + formatRelativeTime(msg.timestamp);
 
             if (msg.avatar) {
                 const avatarImg = document.createElement("img");
@@ -519,16 +1004,40 @@
             }
 
             const messageDiv = document.createElement("div");
-            messageDiv.innerHTML = DOMPurify.sanitize(msg.message);
+            messageDiv.innerHTML = highlightMentions(DOMPurify.sanitize(msg.message));
 
             msgDiv.appendChild(nameDiv);
             msgDiv.appendChild(messageDiv);
             chat.appendChild(msgDiv);
             chat.scrollTop = chat.scrollHeight;
             };
+
+            // Save name to localStorage
+            document.getElementById("name").addEventListener("change", () => {
+                const name = document.getElementById("name").value.trim();
+                if (name) {
+                    localStorage.setItem("chat_name", name);
+                }
+            });
+
+            // Load saved name on page load
+            window.addEventListener("load", () => {
+                const savedName = localStorage.getItem("chat_name");
+                if (savedName) {
+                    document.getElementById("name").value = savedName;
+                }
+            });
+
+            // Send message on Enter key
+            document.getElementById("messages").addEventListener("keypress", (event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    document.getElementById("sendBtn").click();
+                }
+            });
         </script>
 
     </script>
 
-
 </body>
+</html>

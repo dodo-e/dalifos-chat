@@ -1,104 +1,51 @@
+/* ==================== GLOBAL STYLES ==================== */
 body {
   font-family: "Nunito", sans-serif;
-  background-image: linear-gradient(to left, #376bfc, #46e1fc);
-  padding: 20px;
+  background-image: url('assets/bg.png');
   text-align: center;
   color: white;
-} 
+}
+
+img {
+  width: 40px;
+  height: fit-content;
+}
+
+img:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+/* ==================== TYPOGRAPHY ==================== */
 p {
   font-size: 18px;
   color: black;
 }
-.dropdown {
-  position: relative; 
-  display: inline-block;
-  width: fit-content;
+
+.nunito {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
-.dropdown img {
-  width: auto;
-  height: 30px;
-  display: block;
-  margin: auto;
-}
-.dropdown-trigger {
-  padding: 12px 16px;
-  border: 1px solid #ccc;
-  width: 200px;
-  background-color: none;
-  color: #333;
-  text-decoration: none;
-  display: block;
-}
-.dropdown-content {
-  overflow-y: scroll;
-  max-height: 300px;
-  display: none;
-  width: fit-content;
-  position: absolute;
-  border-radius: 4px;
-  background-color: #fff;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-.dropdown-content a {
-  color: black;
-  border-radius: 4px;
-  font-family: candara, sans-serif;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-.dropdown-content a:hover {
-  background-image: linear-gradient(to right, yellow, orange);
-}
-.dropdown:hover .dropdown-content {
-  display: block;
-  width: fit-content;
-}
-.navbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.2); 
-  backdrop-filter: blur(30px);          
-  -webkit-backdrop-filter: blur(30px);  
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border: 2px solid black;
-}
-.navbar img.logo {
-  width: auto;
-  height: 120px;
-  margin-right: 20px;
-}
+
+/* ==================== CHAT AREA ==================== */
 #chat {
-  background-image: url(assets/bg.png);
-  opacity: 0.9;
+  opacity: none;
   background-size: contain;
   background-position: center;
-  border: 3px solid #ccc;
-  height: fit-content;
-  max-height: 300px;
-  width: 100%;
-  max-width: 600px;
+  height: 450px;
+  width: 99%;
+  min-width: fit-content;
   overflow-y: auto;
-  padding: 10px;
+  padding: 5px;
   margin-bottom: 10px;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   margin: auto;
-  animation: more 0.5s infinite;
 }
-@keyframes more {
-  from { height:fit-content; }
-  to { height: fit-content; }
-}
+
+/* ==================== MESSAGES ==================== */
 .message {
   padding: 10px;
   border-radius: 20px;
@@ -106,29 +53,39 @@ p {
   max-width: 600px;
   min-width: 200px;
   box-shadow: 0 5px 5px rgba(0,0,0,0.1);
-  color: rgb(0, 0, 0);
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: rgb(255, 255, 255);
   animation: fadeIn 0.5s ease forwards;
 }
+
 .message.you {
-  background-color: #00e1f1da;
+  background-image: linear-gradient(to right, rgb(1, 89, 170), rgb(65, 153, 255)); 
   align-self: flex-end;
   text-align: right;
+  border-bottom-right-radius: 5px;
 }
+
 .message.other {
-  background-color: #ffffffee;
+  background-color: #ffffff;
   align-self: flex-start;
   text-align: left;
+  border-bottom-left-radius: 5px;
+  color: black;
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+
 .name {
-  font-weight: bold;
-  color: #919191;
-  margin-bottom: 5px;
+  font-weight: 900;
+  height: fit-content;
+  font-size: 20px;
+  color: #000000;
+  background-color: #eeeeee;
+  padding: 2px 10px;
+  width: fit-content;
+  display: block;
+  border-radius: 100px;
+  margin-bottom: 10px;
 }
+
+/* ==================== INPUT FIELDS ==================== */
 input {
   padding: 10px;
   margin-top: -20px;
@@ -141,11 +98,32 @@ input {
   margin: auto;
   min-width: 100px;
 }
+
 input:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(200, 203, 238, 1);
   border: 1px solid rgba(81, 203, 238, 1);
 }
+
+#messages {
+  width: 65%;
+  background-color: white;
+  color: black;
+  font-size: 30px;
+  border-top-left-radius: 0%;
+  border-bottom-left-radius: 0%;
+}
+
+#name {
+  width: 20%;
+  background-color: white;
+  color: black;
+  font-size: 30px;
+  border-top-right-radius: 0%;
+  border-bottom-right-radius: 0%;
+}
+
+/* ==================== BUTTONS ==================== */
 button {
   -webkit-appearance: none;
   appearance: none;
@@ -157,11 +135,10 @@ button {
   background-color: none;
   padding: 10px 20px;
   border-radius: 50px;
-
 }
 
 button:hover {
-  background-image: linear-gradient(to right, yellow, orange);
+  background-image: linear-gradient(to right, rgb(0, 132, 255), rgb(0, 255, 255));
   color: white;
 }
 
@@ -171,13 +148,14 @@ button:hover {
   margin-top: 10px;
   border-radius: 50%;
   padding: 0;
-  background-color: whitesmoke;
+  background-color: rgb(255, 255, 255);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
-#sendBtn img, #recordBtn img, #stopBtn img, #avatarBtn img, #soundButton img{
+
+#sendBtn img, #recordBtn img, #stopBtn img, #avatarBtn img, #soundButton img {
   width: 35px;
   height: 35px;
   margin-top: 10px;
@@ -188,9 +166,68 @@ button:hover {
   justify-content: center;
 }
 
+/* ==================== DROPDOWN MENU ==================== */
+.dropdown img {
+  width: auto;
+  height: 30px;
+  display: block;
+  margin: auto;
+}
+
+.dropdown-trigger {
+  padding: 12px 16px;
+  border: 1px solid #cccccc88;
+  width: 200px;
+  background-color: none;
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content {
+  overflow-y: auto;
+  position: fixed;
+  max-height: 500px;
+  display: none;
+  width: 250px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.74);
+}
+.dropdown-content a {
+  color: black;
+  border-radius: 4px;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-image: linear-gradient(to right, rgb(0, 132, 255), rgb(0, 255, 255));
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropbtn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0px;
+}
+
 .dropdown button, .dropdown .dropbtn {
   background-color: #f1f1f1;
   border: none;
+  cursor: pointer;
+  position: sticky;
+  top: 0px;
+  z-index: 1002;
   padding: 12px 16px;
   width: fit-content;
   text-align: left;
@@ -207,33 +244,36 @@ button:hover {
   color: #333;
   font-size: 16px;
 }
+
 .dropdown .dropbtn:hover {
-  background-color: #ddd;
-}
-.navbar .dropdown {
-  width: fit-content;
-}
-#name, #messages {
-  width: 40%;
-  background-color: white;
-  color: black;
-  font-size: 30px;
-}
-img {
-  width: 40px;
-  height: fit-content;
-}
-img:hover {
-  cursor: pointer;
-  transform: scale(1.1);
+  background-color: #251e1e;
+  position: sticky;
+  top: 0px;
 }
 
-.nunito {
-  font-family: "Nunito", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+/* ==================== CHAT INPUT AREA ==================== */
+.chatting {
+  display: flex;
+  height: 50px;
+  width: 99%;
+  justify-content: center;
+  align-items: center;
+  background: rgb(201, 200, 200);
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+  border: 2px solid black;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== UTILITY CLASSES ==================== */
 .updates {
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
