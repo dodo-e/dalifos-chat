@@ -6,15 +6,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Dalifos© Chat (Beta Release)</title>
+    <title>Dalifos© Chat V1</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
-    <svg style="display: none;">
-  <filter id="liquid-refraction">
-    <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" result="noise" />
-    <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
-  </filter>
+    <div class="gtranslate_wrapper"></div>
+<script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right","switcher_vertical_position":"top"}</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
 </svg>
 <style>
     .typing-indicator {
@@ -25,7 +23,8 @@
     }
     
     .mention {
-        color: #0159aa;
+        color: #aa1a01;
+        font-style: italic;
         font-weight: bold;
         cursor: pointer;
     }
@@ -56,9 +55,9 @@
                 <a href="FAQ.html" title="frequently asked questions"><img src="assets/FAQ.png">FAQ</a>
                 
                 <p>settings</p>
-                <button id="themeToggle" style="width: 100%; text-align: left; background: none; padding: 12px 16px; margin: 0;">🌙 Dark Mode</button>
-                <button id="notificationToggle" style="width: 100%; text-align: left; background: none; padding: 12px 16px; margin: 0;">🔔 Notifications On</button>
-                <button id="emojiPickerBtn" style="width: 100%; text-align: left; background: none; padding: 12px 16px; margin: 0;">😊 Emoji Picker</button>
+                <button id="themeToggle">🌙 Dark Mode</button>
+                <button id="notificationToggle">🔔 Notifications On</button>
+                <button id="emojiPickerBtn">😊 Emoji Picker</button>
                 
                        <p>chats</p>
                             <a href="#" title="private chat" style="cursor: not-allowed;"><img
@@ -66,10 +65,8 @@
             <a href="#" title="private group (not created)" style="cursor: not-allowed;"><img
                 src="assets/group-chat-svgrepo-com.svg">private group chat (comming soon)</a>
             <a href="index.html" title="public chat"><img src="assets/public-opened-svgrepo-com.svg">public chat </a>
-            <a href="chat_AI.html" title="AI chat"><img src="assets/AI.png">AI chat (comming soon)</a>
                           <p>other progects</p>
-                <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo main.png">Dalifos©
-                    web</a>
+                <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo main.png">Dalifos© web</a>
                 <a href="index.html" title="Dalifos© chat"><img src="assets/public-opened-svgrepo-com.svg">Dalifos© chat</a>
                 <a href="https://dodo-e.github.io/Dalifos-BD1/" title="Dalifos© BD1"><img src="assets/logo (2).png">Dalifos© BD1</a>
     </div>
@@ -124,7 +121,9 @@
 
     <!-- Edit Modal Overlay -->
     <div id="editOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999;"></div>
-
+    <script>
+       (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="s1bAU4X25bLvZLhBXTzxu";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
     <script>
         
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -134,7 +133,6 @@
             warning.style.backgroundColor = "#ffcc00";
             warning.style.color = "black";
             warning.style.padding = "10px";
-            warning.style.borderRadius = "10px";
             warning.style.marginBottom = "10px";
             warning.style.fontWeight = "bold";
             document.body.insertBefore(warning, document.body.firstChild);
