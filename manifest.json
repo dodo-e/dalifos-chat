@@ -1,0 +1,12 @@
+{
+    "action": {
+        "default_height": 550,
+        "default_icon": "assets/logo.png",
+        "default_popup": "index.html",
+        "default_width": 600
+    },
+    "description": "a easier way to chat with Dalifos. you don't need to enter the website every time. Just click the extension icon and start chatting!",
+    "manifest_version": 3,
+    "name": "Dalifos Chat extention",
+    "version": "0.1"
+}
