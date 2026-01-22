@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <div class="gtranslate_wrapper"></div>
+<script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right","switcher_vertical_position":"top"}</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Create Private Group - Dalifos Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        .create-group-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .create-group-container h1 {
+            text-align: center;
+            color: #0159aa;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0159aa;
+            box-shadow: 0 0 5px rgba(1, 89, 170, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn-create, .btn-back {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-create {
+            background: #0159aa;
+            color: white;
+        }
+
+        .btn-create:hover {
+            background: #013d7d;
+        }
+
+        .btn-back {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-back:hover {
+            background: #ccc;
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f4f8;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .result-container.success {
+            background: #e8f8e8;
+            border: 2px solid #28a745;
+        }
+
+        .group-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0159aa;
+            margin: 15px 0;
+            letter-spacing: 2px;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            padding: 8px 15px;
+            background: #0159aa;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        .copy-btn:hover {
+            background: #013d7d;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0159aa;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #d9534f;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="create-group-container">
+        <h1>🔐 Create Private Group</h1>
+
+        <form id="createGroupForm">
+            <div class="form-group">
+                <label for="groupName">Group Name:</label>
+                <input type="text" id="groupName" placeholder="Enter your group name" required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label for="creatorName">Your Name (optional):</label>
+                <input type="text" id="creatorName" placeholder="Enter your name" maxlength="50">
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Creating your group...</p>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-back" onclick="goBack()">← Back to Groups</button>
+                <button type="submit" class="btn-create">Create Group 🚀</button>
+            </div>
+        </form>
+
+        <div class="result-container success" id="successResult">
+            <h2>✅ Group Created Successfully!</h2>
+            <p>Your group code:</p>
+            <div class="group-code" id="groupCodeDisplay"></div>
+            <p>Share this code with friends to join your private group</p>
+            <button class="copy-btn" onclick="copyGroupCode()">📋 Copy Code</button>
+            <button class="copy-btn" onclick="openGroup()">💬 Join Group</button>
+            <button class="copy-btn" onclick="createAnother()">➕ Create Another</button>
+        </div>
+
+        <div class="result-container" id="errorResult">
+            <h2>❌ Error</h2>
+            <p id="errorMessage"></p>
+            <button class="copy-btn" onclick="location.reload()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
+        const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
+        const client = window.supabase.createClient(supabaseUrl, anonKey);
+
+        let currentGroupCode = '';
+
+        function generateGroupCode() {
+            // Generate a unique code like "ABC123XYZ"
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 9; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        document.getElementById('createGroupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const groupName = document.getElementById('groupName').value.trim();
+            const creatorName = document.getElementById('creatorName').value.trim() || 'Anonymous';
+
+            if (!groupName) {
+                showError('Group name is required');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                let groupCode;
+                let isUnique = false;
+                let attempts = 0;
+
+                // Keep generating codes until we find a unique one
+                while (!isUnique && attempts < 10) {
+                    groupCode = generateGroupCode();
+                    const { data } = await client
+                        .from('private_groups')
+                        .select('id')
+                        .eq('group_id', groupCode)
+                        .limit(1);
+
+                    isUnique = data && data.length === 0;
+                    attempts++;
+                }
+
+                if (!isUnique) {
+                    throw new Error('Could not generate unique group code. Please try again.');
+                }
+
+                // Insert group into database
+                const { data, error } = await client
+                    .from('private_groups')
+                    .insert([
+                        {
+                            group_id: groupCode,
+                            name: groupName,
+                            creator_name: creatorName
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                showLoading(false);
+                currentGroupCode = groupCode;
+                showSuccess(groupCode);
+
+            } catch (err) {
+                showLoading(false);
+                showError(err.message || 'Error creating group. Please try again.');
+            }
+        });
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('createGroupForm').style.display = show ? 'none' : 'block';
+        }
+
+        function showSuccess(groupCode) {
+            document.getElementById('createGroupForm').style.display = 'none';
+            document.getElementById('errorResult').style.display = 'none';
+            document.getElementById('groupCodeDisplay').textContent = groupCode;
+            document.getElementById('successResult').style.display = 'block';
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorResult').style.display = 'block';
+        }
+
+        function copyGroupCode() {
+            navigator.clipboard.writeText(currentGroupCode).then(() => {
+                alert('Group code copied to clipboard!');
+            });
+        }
+
+        function openGroup() {
+            window.location.href = `private-chat.html?group=${currentGroupCode}`;
+        }
+
+        function createAnother() {
+            document.getElementById('createGroupForm').reset();
+            document.getElementById('successResult').style.display = 'none';
+            document.getElementById('errorResult').style.display = 'none';
+            document.getElementById('createGroupForm').style.display = 'block';
+            document.getElementById('groupName').focus();
+        }
+
+        function goBack() {
+            window.location.href = 'groups.html';
+        }
+    </script>
+</body>
+
+</html>

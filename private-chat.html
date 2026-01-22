@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Private Group Chat - Dalifos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+    <style>
+        .typing-indicator {
+            color: #999;
+            font-style: italic;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .mention {
+            color: #aa1a01;
+            font-style: italic;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mention:hover {
+            text-decoration: underline;
+        }
+
+        .edited-label {
+            font-size: 10px;
+            color: #999;
+            font-style: italic;
+            margin-left: 5px;
+        }
+
+        .seen-by {
+            font-size: 11px;
+            color: #0159aa;
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .seen-icon {
+            display: inline-block;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gtranslate_wrapper"></div>
+
+    <div class="dot-spinner">
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+    </div>
+
+    <div class="dropdown">
+        <div class="dropbtn-container">
+            <button class="dropbtn">☰</button>
+        </div>
+        <div class="dropdown-content">
+            <p>pages</p>
+            <a href="groups.html" title="back to groups"><img src="assets/logo.png">Groups</a>
+            <a href="index.html" title="main chat"><img src="assets/logo.png">Main Chat</a>
+
+            <p>settings</p>
+            <button id="themeToggle">Dark Mode</button>
+            <button id="notificationToggle">🔔 Notifications On</button>
+            <button id="emojiPickerBtn">😀 Emoji Picker</button>
+
+            <p>other projects</p>
+            <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo%20main.png">Dalifos© web</a>
+            <a href="index.html" title="Dalifos© chat"><img src="assets/public-opened-svgrepo-com.svg">Dalifos© chat</a>
+        </div>
+    </div>
+
+    <h2 id="groupTitle">🔐 Private Group Chat</h2>
+
+    <div id="onlineUsersContainer" style="display: none;">
+        <p style="color: #0159aa; margin: 5px 0; font-size: 20px;">👥 Active Users: <span id="onlineCount">0</span></p>
+        <div id="usersList" style="background: #f0f0f0; border-radius: 10px; padding: 10px; margin-bottom: 10px; max-height: fit-content; overflow-y: auto; color: #333; font-size: 12px; width: fit-content; margin: auto; display: block;"></div>
+    </div>
+
+    <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
+
+    <div id="chat" role="main"></div>
+    <br>
+    
+    <div class="chatting">
+        <input type="file" id="avatar" accept="image/*" style="display: none;">
+        <button type="button" id="avatarBtn" title="Choose an avatar (optional)">
+            <img src="assets/avatar-default-svgrepo-com.svg" alt="choose avatar" class="avatar-icon">
+        </button>
+        <input type="text" id="name" placeholder="name" title="Enter your name">
+        <input type="text" id="messages" placeholder="Type here" title="Type your message here (Press Enter to send)">
+        <button id="sendBtn"><img src="assets/paper-plane-tilt-fill-svgrepo-com.svg" title="Send"></button>
+    </div>
+
+    <div id="emojiModal" style="display: none; position: fixed; bottom: 250px; right: 20px; background: white; border: 2px solid #0159aa; border-radius: 10px; padding: 10px; z-index: 1000; max-width: 300px; max-height: 300px; overflow-y: auto;">
+        <div id="emojiGrid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;"></div>
+    </div>
+
+    <div id="editModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 2px solid #0159aa; border-radius: 10px; padding: 20px; z-index: 2000; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h3 style="margin: 0 0 15px 0; color: #333;">Edit</h3>
+        <input type="text" id="editMessageInput" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; box-sizing: border-box;">
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button id="editSaveBtn" style="padding: 8px 16px; background: #0159aa; color: white; border: none; border-radius: 5px; cursor: pointer;">Save</button>
+            <button id="editCancelBtn" style="padding: 8px 16px; background: #ccc; color: black; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <div id="editOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999;"></div>
+
+    <script src="https://dalifosstatus1.statuspage.io/embed/script.js"></script>
+
+    <script>
+let notificationsEnabled = localStorage.getItem("notifications_enabled") !== "false";
+let darkMode = localStorage.getItem("dark_mode") === "true";
+let currentGroupId = '';
+let currentGroupName = '';
+let typingTimeout = null;
+let currentEditingMsgId = null;
+let allMessages = [];
+let userProfiles = {};
+let seenMessages = new Map();
+
+        const supabaseUrl = 'https://auojqvmbgbpfkoatkvkl.supabase.co';
+        const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1b2pxdm1iZ2JwZmtvYXRrdmtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0MzkzMzIsImV4cCI6MjA3MTAxNTMzMn0.FkqEo9BWHkBixdoQ2vEJdpZ-34l77L0Inbh62AIRFG4';
+        const client = window.supabase.createClient(supabaseUrl, anonKey);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        currentGroupId = urlParams.get('group');
+
+        if (!currentGroupId) {
+            alert('❌ No group specified');
+            window.location.href = 'groups.html';
+        }
+
+        async function initializeChat() {
+            try {
+                const { data: groupData } = await client
+                    .from('private_groups')
+                    .select('name')
+                    .eq('group_id', currentGroupId)
+                    .limit(1);
+
+                if (!groupData || groupData.length === 0) {
+                    alert('❌ Group not found');
+                    window.location.href = 'groups.html';
+                    return;
+                }
+
+                currentGroupName = groupData[0].name;
+                document.getElementById('groupTitle').textContent = `🔐 ${currentGroupName}`;
+
+                const savedName = localStorage.getItem("chat_name");
+                if (savedName) {
+                    document.getElementById("name").value = savedName;
+                }
+
+                await loadMessages();
+                subscribeToMessages();
+                document.querySelector('.dot-spinner').style.display = 'none';
+                applyTheme();
+            } catch (err) {
+                alert('Error initializing chat: ' + err.message);
+            }
+        }
+
+        async function loadMessages() {
+            const { data } = await client
+                .from('private_group_messages')
+                .select('*')
+                .eq('group_id', currentGroupId)
+                .order('timestamp', { ascending: true });
+
+            if (data) {
+                allMessages = data;
+                data.forEach(msg => displayMessage(msg));
+                updateUsersList();
+            }
+        }
+
+        function subscribeToMessages() {
+            client
+                .channel(`private-chat-${currentGroupId}`)
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'private_group_messages',
+                    filter: `group_id=eq.${currentGroupId}`
+                }, (payload) => {
+                    const msg = payload.new;
+                    displayMessage(msg);
+                    allMessages.push(msg);
+                    updateUsersList();
+                })
+                .subscribe();
+        }
+
+        function formatRelativeTime(timestamp) {
+            const now = new Date();
+            const msgTime = new Date(timestamp);
+            const diffMs = now - msgTime;
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffSecs / 60);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffSecs < 60) return "just now";
+            if (diffMins < 60) return `${diffMins} m ago`;
+            if (diffHours < 24) return `${diffHours} h ago`;
+            if (diffDays < 7) return `${diffDays} d ago`;
+            return msgTime.toLocaleDateString();
+        }
+
+        function highlightMentions(text) {
+            return text.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
+        }
+
+        function displayMessage(msg) {
+            const nameInput = document.getElementById("name").value.trim() || "Anonymous";
+            const isMyMessage = msg.name === nameInput;
+
+            const chat = document.getElementById('chat');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = isMyMessage ? 'message you' : 'message other';
+            msgDiv.id = `msg-${msg.id}`;
+            msgDiv.dataset.messageId = msg.id;
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'name';
+            nameDiv.style.cursor = 'pointer';
+            nameDiv.innerHTML = DOMPurify.sanitize(msg.name) + ' • ' + formatRelativeTime(msg.timestamp);
+
+            if (msg.avatar) {
+                const avatarImg = document.createElement('img');
+                avatarImg.src = msg.avatar;
+                avatarImg.style.width = '40px';
+                avatarImg.style.height = '40px';
+                avatarImg.style.borderRadius = '50%';
+                avatarImg.style.marginRight = '10px';
+                nameDiv.prepend(avatarImg);
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = highlightMentions(DOMPurify.sanitize(msg.message));
+            messageDiv.className = 'message-content';
+
+            msgDiv.appendChild(nameDiv);
+            msgDiv.appendChild(messageDiv);
+
+            if (isMyMessage) {
+                const buttonsContainer = document.createElement('div');
+                buttonsContainer.style.marginTop = '5px';
+                buttonsContainer.style.display = 'flex';
+                buttonsContainer.style.gap = '5px';
+
+                const editBtn = document.createElement('button');
+                editBtn.textContent = '✏️ Edit';
+                editBtn.style.background = 'rgba(0,150,255,0.3)';
+                editBtn.style.border = 'none';
+                editBtn.style.cursor = 'pointer';
+                editBtn.style.padding = '3px 8px';
+                editBtn.style.borderRadius = '5px';
+                editBtn.style.fontSize = '12px';
+                editBtn.addEventListener('click', () => {
+                    const currentText = messageDiv.textContent;
+                    openEditModal(msg.id, currentText);
+                });
+                buttonsContainer.appendChild(editBtn);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '🗑️ Delete';
+                deleteBtn.style.background = 'rgba(255,0,0,0.3)';
+                deleteBtn.style.border = 'none';
+                deleteBtn.style.cursor = 'pointer';
+                deleteBtn.style.padding = '3px 8px';
+                deleteBtn.style.borderRadius = '5px';
+                deleteBtn.style.fontSize = '12px';
+                deleteBtn.addEventListener('click', () => {
+                    msgDiv.style.display = 'none';
+                });
+                buttonsContainer.appendChild(deleteBtn);
+
+                msgDiv.appendChild(buttonsContainer);
+            }
+
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function updateUsersList() {
+            const uniqueUsers = [...new Set(allMessages.map(m => m.name))];
+            document.getElementById('onlineCount').textContent = uniqueUsers.length;
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = uniqueUsers.map(user => `<div style="padding: 3px; border-bottom: 1px solid ${darkMode ? '#555' : '#ddd'};">✓ ${user}</div>`).join('');
+            document.getElementById('onlineUsersContainer').style.display = uniqueUsers.length > 0 ? 'block' : 'none';
+        }
+
+        // Send message
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('messages').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        async function sendMessage() {
+            const nameInput = document.getElementById('name').value.trim() || 'Anonymous';
+            const messageInput = document.getElementById('messages').value.trim();
+
+            if (!messageInput) return;
+
+            localStorage.setItem('chat_name', nameInput);
+
+            try {
+                const { error } = await client
+                    .from('private_group_messages')
+                    .insert([{
+                        group_id: currentGroupId,
+                        name: nameInput,
+                        message: messageInput
+                    }]);
+
+                if (error) throw error;
+                document.getElementById('messages').value = '';
+            } catch (err) {
+                alert('Error sending message: ' + err.message);
+            }
+        }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            darkMode = !darkMode;
+            localStorage.setItem('dark_mode', darkMode);
+            applyTheme();
+        });
+
+        function applyTheme() {
+            if (darkMode) {
+                document.body.style.backgroundColor = 'black';
+                document.body.style.color = '#e0e0e0';
+
+                const allText = document.querySelectorAll('p, h1, h2, h3, h4, span');
+                allText.forEach(el => {
+                    if (!el.style.color || el.style.color === 'black') {
+                        el.style.color = '#e0e0e0';
+                    }
+                });
+
+                const inputs = document.querySelectorAll("input[type='text']");
+                inputs.forEach(input => {
+                    input.style.backgroundColor = '#333';
+                    input.style.color = '#e0e0e0';
+                    input.style.borderColor = '#555';
+                });
+
+                const usersList = document.getElementById('usersList');
+                if (usersList) {
+                    usersList.style.backgroundColor = '#333';
+                    usersList.style.color = '#e0e0e0';
+                }
+
+                const emojiModal = document.getElementById('emojiModal');
+                emojiModal.style.backgroundColor = '#2a2a2a';
+                emojiModal.style.borderColor = '#555';
+
+                const editModal = document.getElementById('editModal');
+                editModal.style.backgroundColor = '#2a2a2a';
+                editModal.style.color = '#e0e0e0';
+
+                themeToggle.textContent = '🔦 Light Mode';
+            } else {
+                document.body.style.backgroundColor = '';
+                document.body.style.color = '';
+
+                const allText = document.querySelectorAll('p, h1, h2, h3, h4, span');
+                allText.forEach(el => {
+                    el.style.color = '';
+                });
+
+                const inputs = document.querySelectorAll("input[type='text']");
+                inputs.forEach(input => {
+                    input.style.backgroundColor = 'white';
+                    input.style.color = 'black';
+                    input.style.borderColor = '';
+                });
+
+                themeToggle.textContent = '🌙 Dark Mode';
+            }
+        }
+
+        // Notification Toggle
+        const notificationToggle = document.getElementById('notificationToggle');
+        notificationToggle.addEventListener('click', () => {
+            notificationsEnabled = !notificationsEnabled;
+            localStorage.setItem('notifications_enabled', notificationsEnabled);
+            notificationToggle.textContent = notificationsEnabled ? '🔔 Notifications On' : '🔕 Notifications Off';
+        });
+
+        // Emoji Picker
+        const commonEmojis = ['😀', '😂', '😍', '🥰', '😘', '🤔', '😊', '🔥', '👍', '👎', '❤️', '😢', '😡', '🎉', '🎊', '🎈', '⭐', '✨', '☀️', '💵', '✈️', '🎬', '😭', '🤨', '⚠️'];
+        const emojiPickerBtn = document.getElementById('emojiPickerBtn');
+        const emojiModal = document.getElementById('emojiModal');
+        const emojiGrid = document.getElementById('emojiGrid');
+
+        commonEmojis.forEach(emoji => {
+            const emojiBtn = document.createElement('button');
+            emojiBtn.textContent = emoji;
+            emojiBtn.style.fontSize = '24px';
+            emojiBtn.style.border = 'none';
+            emojiBtn.style.cursor = 'pointer';
+            emojiBtn.style.padding = '5px';
+            emojiBtn.style.backgroundColor = darkMode ? '#333' : 'white';
+            emojiBtn.addEventListener('click', () => {
+                document.getElementById('messages').value += emoji;
+                emojiModal.style.display = 'none';
+            });
+            emojiGrid.appendChild(emojiBtn);
+        });
+
+        emojiPickerBtn.addEventListener('click', () => {
+            emojiModal.style.display = emojiModal.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Edit Modal
+        const editModal = document.getElementById('editModal');
+        const editOverlay = document.getElementById('editOverlay');
+        const editMessageInput = document.getElementById('editMessageInput');
+        const editSaveBtn = document.getElementById('editSaveBtn');
+        const editCancelBtn = document.getElementById('editCancelBtn');
+
+        function openEditModal(msgId, currentText) {
+            currentEditingMsgId = msgId;
+            editMessageInput.value = currentText;
+            editModal.style.display = 'block';
+            editOverlay.style.display = 'block';
+        }
+
+        function closeEditModal() {
+            editModal.style.display = 'none';
+            editOverlay.style.display = 'none';
+        }
+
+        editSaveBtn.addEventListener('click', () => {
+            const newText = editMessageInput.value.trim();
+            if (newText) {
+                const msgDiv = document.getElementById(`msg-${currentEditingMsgId}`);
+                const contentDiv = msgDiv.querySelector('.message-content');
+                contentDiv.innerHTML = highlightMentions(DOMPurify.sanitize(newText));
+            }
+            closeEditModal();
+        });
+
+        editCancelBtn.addEventListener('click', closeEditModal);
+        editOverlay.addEventListener('click', closeEditModal);
+
+        document.getElementById('avatarBtn').addEventListener('click', () => {
+            document.getElementById('avatar').click();
+        });
+
+        window.addEventListener('load', () => {
+            document.querySelector('.dot-spinner').style.display = 'none';
+        });
+
+        initializeChat();
+    </script>
+</body>
+
+</html>

@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <script src="https://dalifosstatus.statuspage.io/embed/script.js"></script>
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="q_vJ_negIqtaZpzVtg0aMM9CNBFzAuNxlm2kTpHXAtA">
     <meta name="keywords" content="chatting online, online chat, Dalifos, Ai chat, public chat, voice notes, free chat, dalifos chat, dalifos online chat, dalifos ai chat, dalifos public chat, dalifos voice notes, chat">
@@ -11,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="author" content="Dalifos">
     <meta name="rating" content="+10">
-    <title>Dalifos © Chat V2.0 No sign in required!</title>
+    <title>Dalifos © Chat shopping group</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,11 +78,6 @@
 </head>
 
 <body>
-    <div class="dropdown">
-        <div class="dropbtn-container">
-            <button class="dropbtn">☰</button>
-        </div>
-        
     <div class="gtranslate_wrapper"></div>
 
     <div class="dot-spinner">
@@ -97,7 +91,10 @@
         <div class="dot-spinner__dot"></div>
     </div>
 
-    
+    <div class="dropdown">
+        <div class="dropbtn-container">
+            <button class="dropbtn">☰</button>
+        </div>
         <div class="dropdown-content">
             <p>pages</p>
             <a href="whats%20new%20in%20Dalifos%20chat.html" title="what's new in Dalifos chat"><img src="assets/logo.png">what's new</a>
@@ -111,7 +108,8 @@
             <button id="emojiPickerBtn">😀 Emoji Picker</button>
 
             <p>chats</p>
-            <a href="groups.html" title="groups"><img src="assets/group-chat-svgrepo-com.svg"> group chats</a>
+            <a href="#" title="private chat" style="cursor: not-allowed;"><img src="assets/private-message-svgrepo-com.svg"> &gt;private chat (Coming Soon)</a>
+            <a href="#" title="private group (not created)" style="cursor: not-allowed;"><img src="assets/group-chat-svgrepo-com.svg">private group chat (comming soon)</a>
             <a href="index.html" title="public chat"><img src="assets/public-opened-svgrepo-com.svg">public chat </a>
             <p>other progects</p>
             <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo%20main.png">Dalifos© web</a>
@@ -120,7 +118,7 @@
         </div>
     </div>
 
-    <h2>💬 Dalifos Chat v 2.0 💬</h2>
+    <h2>💬 Dalifos Chat shopping group 💬</h2>
 
     <!-- Online Users Section -->
     <div id="onlineUsersContainer" style="display: none;">
@@ -638,7 +636,7 @@ let currentUser = "Anonymous";
         async function fetchOldMessages() {
             try {
                 const { data, error } = await client
-                    .from('messages_groups')
+                    .from('messages_shopping')
                     .select('*')
                     .order('timestamp', { ascending: true });
 
@@ -667,11 +665,11 @@ let currentUser = "Anonymous";
         const violations = JSON.parse(localStorage.getItem("violations")) || {};
 
         client
-            .channel('messages-realtime-groups')
+            .channel('messages-realtime-shopping')
             .on('postgres_changes', {
                 event: 'INSERT',
                 schema: 'public',
-                table: 'messages_groups'
+                table: 'messages_shopping'
             }, (payload) => {
                 const msg = payload.new;
                 const nameInput = document.getElementById("name").value.trim() || "Anonymous";
