@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <script src="https://dalifosstatus.statuspage.io/embed/script.js"></script>
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="q_vJ_negIqtaZpzVtg0aMM9CNBFzAuNxlm2kTpHXAtA">
     <meta name="keywords" content="chatting online, online chat, Dalifos, Ai chat, public chat, voice notes, free chat, dalifos chat, dalifos online chat, dalifos ai chat, dalifos public chat, dalifos voice notes, chat">
@@ -36,17 +35,6 @@
             "switcher_vertical_position": "top"
         };
     </script>
-    <script>
-    // Version: 2.0
-    window.Brevo = window.Brevo || [];
-    Brevo.push([
-        "init",
-        {
-        client_key: "1u2vqz66qwhqtfbxhakr6w75",
-        // Optional: Add other initialization options, see documentation
-        }
-    ]);
-</script>
     <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
 
     <style>
@@ -95,7 +83,7 @@
             <button class="dropbtn">☰</button>
         </div>
         
-    <div class="gtranslate_wrapper"></div>
+        <div class="gtranslate_wrapper"></div>
 
     <div class="dot-spinner">
         <div class="dot-spinner__dot"></div>
@@ -118,13 +106,13 @@
 
             <p>settings</p>
             <button id="themeToggle">Dark Mode</button>
-            <button id="notificationToggle"> Notifications On</button>
+            <button id="notificationToggle">🔔 Notifications On</button>
             <button id="emojiPickerBtn">😀 Emoji Picker</button>
 
             <p>chats</p>
             <a href="groups.html" title="groups"><img src="assets/group-chat-svgrepo-com.svg"> group chats</a>
             <a href="index.html" title="public chat"><img src="assets/public-opened-svgrepo-com.svg">public chat </a>
-            <p>other progects</p>
+            <p>other projects</p>
             <a href="https://dodo-e.github.io/dalifos-website/" title="Dalifos main web"><img src="assets/logo%20main.png">Dalifos© web</a>
             <a href="index.html" title="Dalifos© chat"><img src="assets/public-opened-svgrepo-com.svg">Dalifos© chat</a>
             <a href="https://dodo-e.github.io/Dalifos-BD1/" title="Dalifos© BD1"><img src="assets/logo%20(2).png">Dalifos© BD1</a>
@@ -177,10 +165,7 @@
     <!-- Edit Modal Overlay -->
     <div id="editOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999;"></div>
 
-    <script src="https://dalifosstatus1.statuspage.io/embed/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
-
-
 
     <script>
 // ============ VARIABLE DECLARATIONS ============
@@ -388,30 +373,35 @@ let currentUser = "Anonymous";
         const emojiModal = document.getElementById("emojiModal");
         const emojiGrid = document.getElementById("emojiGrid");
 
-        commonEmojis.forEach(emoji => {
-            const emojiBtn = document.createElement("button");
-            emojiBtn.textContent = emoji;
-            emojiBtn.style.fontSize = "24px";
-            emojiBtn.style.border = "none";
-            emojiBtn.style.cursor = "pointer";
-            emojiBtn.style.padding = "5px";
-            emojiBtn.style.backgroundColor = darkMode ? "#333" : "white";
-            emojiBtn.addEventListener("click", () => {
-                document.getElementById("messages").value += emoji;
-                emojiModal.style.display = "none";
+        if (emojiGrid && emojiPickerBtn && emojiModal) {
+            commonEmojis.forEach(emoji => {
+                const emojiBtn = document.createElement("button");
+                emojiBtn.textContent = emoji;
+                emojiBtn.style.fontSize = "24px";
+                emojiBtn.style.border = "none";
+                emojiBtn.style.cursor = "pointer";
+                emojiBtn.style.padding = "5px";
+                emojiBtn.style.backgroundColor = darkMode ? "#333" : "white";
+                emojiBtn.addEventListener("click", () => {
+                    const messagesInput = document.getElementById("messages");
+                    if (messagesInput) {
+                        messagesInput.value += emoji;
+                        emojiModal.style.display = "none";
+                    }
+                });
+                emojiGrid.appendChild(emojiBtn);
             });
-            emojiGrid.appendChild(emojiBtn);
-        });
 
-        emojiPickerBtn.addEventListener("click", () => {
-            emojiModal.style.display = emojiModal.style.display === "none" ? "block" : "none";
-        });
+            emojiPickerBtn.addEventListener("click", () => {
+                emojiModal.style.display = emojiModal.style.display === "none" ? "block" : "none";
+            });
 
-        document.addEventListener("click", (e) => {
-            if (e.target !== emojiPickerBtn && e.target !== emojiModal && !emojiModal.contains(e.target)) {
-                emojiModal.style.display = "none";
-            }
-        });
+            document.addEventListener("click", (e) => {
+                if (e.target !== emojiPickerBtn && e.target !== emojiModal && !emojiModal.contains(e.target)) {
+                    emojiModal.style.display = "none";
+                }
+            });
+        }
 
         // Edit Message Functions
         const editModal = document.getElementById("editModal");
@@ -970,5 +960,4 @@ let currentUser = "Anonymous";
         });
     </script>
 </body>
-
 </html>
